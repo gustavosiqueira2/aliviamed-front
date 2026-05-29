@@ -21,6 +21,8 @@ import Forms from '@pages/Forms/Forms';
 
 import Workflows from '@pages/Workflows/Workflows';
 
+import Financial from '@pages/Financial/Financial';
+
 import Clinic from '@pages/Clinic/Clinic';
 
 import Page404 from '@pages/404';
@@ -56,6 +58,8 @@ const AppRoutes = () => (
       <Route path={ROUTE_NAMES.NEW_FORM} element={<NewForm />} />
 
       <Route path={ROUTE_NAMES.PATIENT_WORKFLOW} element={<Workflows />} />
+
+      <Route path={ROUTE_NAMES.FINANCIAL} element={<Financial />} />
 
       <Route path={ROUTE_NAMES.CLINIC} element={<Clinic />} />
 

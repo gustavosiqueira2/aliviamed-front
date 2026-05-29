@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import type { ApiMeta } from '@interfaces/ApiMeta.interface';
 
 import api from '../../services/api';
+import type { TGetConsultApiReturn } from './Consult';
 
 interface IPatient {
   id: string;
@@ -12,6 +13,10 @@ interface IPatient {
   updatedAt: Date;
   name: string;
   birthdate: Date;
+  phone?: string;
+  document?: string;
+  sex?: string;
+  email?: string;
 }
 
 interface IApiPatient {
@@ -20,6 +25,10 @@ interface IApiPatient {
   updatedAt: Date;
   name: string;
   birthdate: string;
+  phone?: string;
+  document?: string;
+  sex?: string;
+  email?: string;
 }
 
 interface IPatients {
@@ -55,6 +64,10 @@ const getPatients = async (): Promise<IPatients> => {
 type TCreateUpdatePatientPayload = {
   name: string;
   birthdate: string;
+  phone?: string | null;
+  document?: string | null;
+  sex?: string | null;
+  email?: string | null;
 };
 
 type SearchPatientsResponse = {
@@ -123,4 +136,19 @@ const updatePatient = async ({
   ...payload
 }: TCreateUpdatePatientPayload & { id: string }) => {
   await api.put(`/patient/${id}`, payload);
+};
+
+export const usePatientConsultHistory = (patientId?: string) =>
+  useQuery({
+    queryKey: ['PATIENT_CONSULT_HISTORY', patientId],
+    queryFn: () => getPatientConsultHistory(patientId!),
+    enabled: !!patientId,
+  });
+
+const getPatientConsultHistory = async (patientId: string) => {
+  const { data } = await api.get<TGetConsultApiReturn[]>(
+    `patient/${patientId}/consult`,
+  );
+
+  return data;
 };

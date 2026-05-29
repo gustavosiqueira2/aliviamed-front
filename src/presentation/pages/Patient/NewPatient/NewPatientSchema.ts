@@ -7,4 +7,8 @@ export const NewPatientSchema = z.object({
   birthdate: z
     .date('Data de nascimento é obrigatória')
     .max(new Date(), 'Data de nascimento não pode ser no futuro'),
+  phone: z.string().optional(),
+  document: z.string().optional(),
+  sex: z.enum(['MALE', 'FEMALE', 'OTHER']).optional(),
+  email: z.email('E-mail inválido').or(z.literal('')).optional(),
 });

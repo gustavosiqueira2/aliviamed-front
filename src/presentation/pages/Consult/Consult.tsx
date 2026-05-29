@@ -1,22 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import dayjs from 'dayjs';
-
 import { useNavigate, useParams } from 'react-router';
 
 import { useForm, useWatch } from 'react-hook-form';
 
-import { Save, UserRound } from 'lucide-react';
-import {
-  Alert,
-  Avatar,
-  Button,
-  Card,
-  Empty,
-  Popconfirm,
-  theme,
-  Typography,
-} from 'antd';
+import { Save } from 'lucide-react';
+import { Alert, Button, Card, Popconfirm, theme, Typography } from 'antd';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
@@ -24,17 +13,23 @@ import {
   useConsultByAppointmentId,
   useFinishConsult,
   useUpdateConsult,
+  type TGetConsultApiReturn,
 } from '@store/Consult';
+import { usePatient } from '@store/PatientStore';
 
 import { useDebounce } from '@hooks/useDebounce';
 
 import TextAreaInput from '@components/Form/TextAreaInput';
 import FadeWrapper from '@components/FadeWrapper';
 
-import Timer from './Timer';
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-const { Title, Paragraph, Text } = Typography;
+import PreviousConsultsList from '@components/Consult/PreviousConsultsList';
+import ConsultDetailDrawer from '@components/Consult/ConsultDetailDrawer';
+
+import PatientSummaryHeader from './components/PatientSummaryHeader';
+
+const { Title, Text } = Typography;
 
 type TConsultForm = {
   complaint?: null | string;
@@ -55,12 +50,16 @@ const Consult = () => {
   } = theme.useToken();
 
   const { data: consult } = useConsultByAppointmentId(appointmentId!);
+  const { data: patient } = usePatient(consult?.patient.id ?? '');
+
   const { mutateAsync: finishConsultAsync, isPending: isPendingFinish } =
     useFinishConsult();
   const { mutate: updateConsult, mutateAsync: updateConsultAsync } =
     useUpdateConsult();
 
   const [isFinishingConsultation, setIsFinishingConsultation] = useState(false);
+  const [selectedConsult, setSelectedConsult] =
+    useState<TGetConsultApiReturn | null>(null);
 
   const { control, reset, formState } = useForm<TConsultForm>();
 
@@ -134,39 +133,20 @@ const Consult = () => {
     }
   };
 
-  const { patient } = consult;
-
   return (
     <FadeWrapper>
       <form className="pr-1 pb-6">
-        <div className="flex items-center justify-between">
-          <Title level={2} className="mb-0!">
-            Consulta em andamento
-          </Title>
+        <Title level={4} className="mb-2!">
+          Consulta em andamento
+        </Title>
 
-          <Timer start={dayjs(consult.startedAt)} />
-        </div>
-
-        <div className="mt-2 flex gap-4">
+        <div className="flex gap-2">
           <div className="flex flex-1 flex-col gap-2">
-            <Card>
-              <div className="flex items-center gap-4">
-                <Avatar size={64} className="bg-blue-200/50!">
-                  <UserRound size={32} className="text-blue-500" />
-                </Avatar>
-
-                <div className="flex flex-col">
-                  <Title level={4} className="my-0!">
-                    {patient.name}
-                  </Title>
-
-                  <Paragraph className="my-0!">
-                    Data de Nascimento:{' '}
-                    {dayjs(patient.birthdate).toDate().toLocaleDateString()}
-                  </Paragraph>
-                </div>
-              </div>
-            </Card>
+            <PatientSummaryHeader
+              patient={patient ?? consult.patient}
+              professionalName={consult.professional.name}
+              startedAt={consult.startedAt}
+            />
 
             <Alert
               showIcon
@@ -175,7 +155,7 @@ const Consult = () => {
                 <Text style={{ color: colorPrimary }}>
                   <b>Atenção:</b> As alterações são salvas automaticamente!{' '}
                   <span className="font-normal!">
-                    (um ícone apareça durante os salvamentos)
+                    (um ícone aparece durante os salvamentos)
                   </span>
                 </Text>
               }
@@ -187,49 +167,58 @@ const Consult = () => {
                   Motivo da consulta
                 </Title>
 
-                <TextAreaInput control={control} name="complaint" rows={8} />
+                <TextAreaInput control={control} name="complaint" rows={6} />
               </Card>
               <Card className="flex-1" classNames={{ body: 'p-4!' }}>
                 <Title level={5} className="mb-1!">
                   Evolução clínica
                 </Title>
 
-                <TextAreaInput control={control} name="evolution" rows={8} />
+                <TextAreaInput control={control} name="evolution" rows={6} />
               </Card>
             </div>
+
             <div className="flex gap-2">
               <Card className="flex-1" classNames={{ body: 'p-4!' }}>
                 <Title level={5} className="mb-1!">
                   Diagnóstico
                 </Title>
 
-                <TextAreaInput control={control} name="diagnosis" rows={8} />
+                <TextAreaInput control={control} name="diagnosis" rows={6} />
               </Card>
               <Card className="flex-1" classNames={{ body: 'p-4!' }}>
                 <Title level={5} className="mb-1!">
                   Prescrição
                 </Title>
 
-                <TextAreaInput control={control} name="prescription" rows={8} />
+                <TextAreaInput control={control} name="prescription" rows={6} />
               </Card>
             </div>
 
-            <Card className="flex-1">
-              <Title level={4}>Observações</Title>
+            <Card classNames={{ body: 'p-4!' }}>
+              <Title level={5} className="mb-1!">
+                Observações
+              </Title>
 
-              <TextAreaInput control={control} name="notes" rows={4} />
+              <TextAreaInput control={control} name="notes" rows={6} />
             </Card>
           </div>
 
           <Card
             className="min-w-80"
-            classNames={{ body: 'flex h-full flex-col' }}
+            classNames={{ body: 'flex h-full flex-col p-0!' }}
           >
-            <Title level={5}>Outras consultas</Title>
-
-            <div className="flex flex-1 items-center justify-center">
-              <Empty description="Esse paciente não possui consultas anteriores" />
+            <div className="p-4 pb-0">
+              <Title level={5} className="my-0!">
+                Outras consultas
+              </Title>
             </div>
+
+            <PreviousConsultsList
+              patientId={consult.patient.id}
+              currentConsultId={consult.id}
+              onSelect={setSelectedConsult}
+            />
           </Card>
         </div>
 
@@ -247,6 +236,12 @@ const Consult = () => {
           </Popconfirm>
         </div>
       </form>
+
+      <ConsultDetailDrawer
+        consult={selectedConsult}
+        open={!!selectedConsult}
+        onClose={() => setSelectedConsult(null)}
+      />
     </FadeWrapper>
   );
 };

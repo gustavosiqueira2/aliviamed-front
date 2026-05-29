@@ -61,7 +61,7 @@ const createConsult = async (appointmentId: string) => {
   return data;
 };
 
-type TGetConsultApiReturn = {
+export type TGetConsultApiReturn = {
   id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -155,6 +155,10 @@ export const useFinishConsult = () =>
       queryClient.removeQueries({ queryKey: ['ACTIVE_CONSULT'] });
       queryClient.removeQueries({
         queryKey: ['APPOINTMENT_CONSULT'],
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['PATIENT_CONSULT_HISTORY'],
         exact: false,
       });
     },

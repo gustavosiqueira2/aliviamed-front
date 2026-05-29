@@ -17,6 +17,8 @@ import { usePatient, useUpdatePatient } from '@store/PatientStore';
 
 import TextInput from '@components/Form/TextInput';
 import DateInput from '@components/Form/DateInput';
+import SelectInput from '@components/Form/SelectInput';
+import PhoneInput from '@components/Form/PhoneInput';
 
 import {
   UpdatePatientSchema,
@@ -43,6 +45,10 @@ const UpdatePatient = () => {
       reset({
         name: patient.name,
         birthdate: patient.birthdate,
+        phone: patient.phone ?? '',
+        document: patient.document ?? '',
+        sex: patient.sex as TUpdatePatientForm['sex'],
+        email: patient.email ?? '',
       });
     }
   }, [patient, reset]);
@@ -54,9 +60,13 @@ const UpdatePatient = () => {
 
     try {
       await mutateAsync({
-        ...data,
-        birthdate: dayjs(data.birthdate).format('YYYY-MM-DD'),
         id: patientId,
+        name: data.name,
+        birthdate: dayjs(data.birthdate).format('YYYY-MM-DD'),
+        phone: data.phone || null,
+        document: data.document || null,
+        sex: data.sex || null,
+        email: data.email || null,
       });
 
       notify({
@@ -115,6 +125,51 @@ const UpdatePatient = () => {
             />
           </div>
 
+          <Title level={4} className="mt-4! mb-1!">
+            Dados adicionais
+          </Title>
+          <Divider className="mt-0! mb-2!" />
+          <div className="flex gap-4">
+            <PhoneInput
+              control={control}
+              name="phone"
+              label="Telefone"
+              optional
+              disabled={isPending}
+            />
+            <TextInput
+              control={control}
+              name="document"
+              label="CPF"
+              optional
+              maxLength={14}
+              disabled={isPending}
+            />
+          </div>
+          <div className="mt-2 flex gap-4">
+            <SelectInput
+              control={control}
+              name="sex"
+              label="Sexo"
+              optional
+              allowClear
+              options={[
+                { label: 'Masculino', value: 'MALE' },
+                { label: 'Feminino', value: 'FEMALE' },
+                { label: 'Outro', value: 'OTHER' },
+              ]}
+              disabled={isPending}
+            />
+            <TextInput
+              control={control}
+              name="email"
+              label="E-mail"
+              type="email"
+              optional
+              disabled={isPending}
+            />
+          </div>
+
           <div className="flex justify-end">
             <Button
               disabled={isPending}
@@ -122,7 +177,7 @@ const UpdatePatient = () => {
               type="primary"
               className="mt-4"
             >
-              Cadastrar
+              Salvar alterações
             </Button>
           </div>
         </form>

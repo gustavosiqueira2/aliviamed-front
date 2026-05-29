@@ -1,11 +1,22 @@
+import { useState } from 'react';
+
 import { Link, useNavigate, useParams } from 'react-router';
+
+import dayjs from 'dayjs';
 
 import { Avatar, Breadcrumb, Button, Card, Typography } from 'antd';
 import { UserRound } from 'lucide-react';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
+import { calculateAge } from '@functions/calculateAge';
+import { translateSex } from '@functions/translateSex';
+
 import { usePatient } from '@store/PatientStore';
+import { type TGetConsultApiReturn } from '@store/Consult';
+
+import PreviousConsultsList from '@components/Consult/PreviousConsultsList';
+import ConsultDetailDrawer from '@components/Consult/ConsultDetailDrawer';
 
 const { Title, Paragraph } = Typography;
 
@@ -15,7 +26,12 @@ const PatientDetail = () => {
 
   const { data: patient } = usePatient(patientId!);
 
+  const [selectedConsult, setSelectedConsult] =
+    useState<TGetConsultApiReturn | null>(null);
+
   if (!patient) return;
+
+  const age = calculateAge(patient.birthdate);
 
   return (
     <>
@@ -49,11 +65,45 @@ const PatientDetail = () => {
               {patient.name}
             </Title>
             <Paragraph className="my-0!">
-              Data de Nascimento: {patient?.birthdate.toLocaleDateString()}
+              {age !== null && `${age} anos · `}Data de Nascimento:{' '}
+              {dayjs(patient.birthdate).format('DD/MM/YYYY')}
             </Paragraph>
+            {patient.sex && (
+              <Paragraph className="my-0!">
+                Sexo: {translateSex(patient.sex)}
+              </Paragraph>
+            )}
+            {patient.document && (
+              <Paragraph className="my-0!">CPF: {patient.document}</Paragraph>
+            )}
+            {patient.phone && (
+              <Paragraph className="my-0!">Telefone: {patient.phone}</Paragraph>
+            )}
+            {patient.email && (
+              <Paragraph className="my-0!">E-mail: {patient.email}</Paragraph>
+            )}
           </div>
         </div>
       </Card>
+
+      <Card className="mt-4!" classNames={{ body: 'flex flex-col p-0! pb-4' }}>
+        <div className="p-4 pb-0">
+          <Title level={4} className="my-0!">
+            Histórico de consultas
+          </Title>
+        </div>
+
+        <PreviousConsultsList
+          patientId={patientId}
+          onSelect={setSelectedConsult}
+        />
+      </Card>
+
+      <ConsultDetailDrawer
+        consult={selectedConsult}
+        open={!!selectedConsult}
+        onClose={() => setSelectedConsult(null)}
+      />
     </>
   );
 };

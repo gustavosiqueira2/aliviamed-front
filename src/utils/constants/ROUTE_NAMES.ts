@@ -18,5 +18,7 @@ export const ROUTE_NAMES = {
 
   PATIENT_WORKFLOW: '/patient-workflow',
 
+  FINANCIAL: '/financial',
+
   CLINIC: '/clinic',
 } as const;

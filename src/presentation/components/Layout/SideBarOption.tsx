@@ -5,6 +5,7 @@ import {
   House,
   Settings,
   UserRound,
+  Wallet,
   Workflow,
 } from 'lucide-react';
 
@@ -74,6 +75,17 @@ const SideBarOption = (
           />
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.PATIENT_WORKFLOW),
+      },
+      {
+        key: ROUTE_NAMES.FINANCIAL,
+        label: 'Financeiro',
+        icon: (
+          <Wallet
+            size={18}
+            {...getIconColor('#0d9488', ROUTE_NAMES.FINANCIAL)}
+          />
+        ),
+        onClick: () => handleNavigate(ROUTE_NAMES.FINANCIAL),
       },
       {
         key: ROUTE_NAMES.CLINIC,
