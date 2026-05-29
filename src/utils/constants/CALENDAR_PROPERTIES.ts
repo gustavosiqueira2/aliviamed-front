@@ -1,0 +1,9 @@
+export const CALENDAR_PROPERTIES = {
+  HOURS: 24,
+  STEP_HEIGHT: 12,
+  STEP_COUNT: 4,
+  // STEP_HEIGHT * STEP_COUNT
+  HOUR_HEIGHT: 12 * 4,
+  // HOUR_HEIGHT * HOURS
+  FULL_HEIGHT: 12 * 4 * 24,
+} as const;

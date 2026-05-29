@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "paths": {
+      "@api/*": ["./src/application/api/*"],
+      "@store/*": ["./src/application/store/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@assets/*": ["./src/presentation/assets/*"],
+      "@components/*": ["./src/presentation/components/*"],
+      "@pages/*": ["./src/presentation/pages/*"],
+      "@routes/*": ["./src/presentation/routes/*"],
+      "@contexts/*": ["./src/services/contexts/*"],
+      "@constants/*": ["./src/utils/constants/*"],
+      "@functions/*": ["./src/utils/functions/*"],
+      "@hooks/*": ["./src/utils/hooks/*"]
+    }
+  },
+  "include": ["src"]
+}
