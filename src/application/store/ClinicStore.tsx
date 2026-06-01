@@ -71,6 +71,25 @@ const changeUserStatus = async ({ id, status }: TChangeUserStatusPayload) => {
   }
 };
 
+type TChangeUserRolePayload = {
+  id: string;
+  role: keyof typeof USER_ROLES;
+};
+
+export const useChangeUserRole = () =>
+  useMutation({
+    mutationFn: changeUserRole,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['CLINIC'] });
+    },
+  });
+
+const changeUserRole = async ({ id, role }: TChangeUserRolePayload) => {
+  const { data } = await api.patch('/clinic/users/role', { id, role });
+
+  return data;
+};
+
 type SearchProfessionalResponse = {
   id: string;
   name: string;

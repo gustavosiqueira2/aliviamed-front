@@ -7,8 +7,11 @@ import { getApiError } from '@functions/getApiError';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
+import type { USER_ROLES } from '@constants/USER_ROLES';
+
 import {
   useAddCollaborator,
+  useChangeUserRole,
   useChangeUserStatus,
   useClinic,
   type TClinicUser,
@@ -19,6 +22,7 @@ import FadeWrapper from '@components/FadeWrapper';
 
 import type { TManualAdditionSchemaForm } from './components/ManualAdditionSchema';
 import AddCollaboratorModal from './components/AddCollaboratorModal';
+import EditRoleModal from './components/EditRoleModal';
 
 const { Title } = Typography;
 
@@ -30,11 +34,14 @@ const Clinic = () => {
 
   const [showAddCollaboratorModal, setShowAddCollaboratorModal] =
     useState(false);
+  const [editingUser, setEditingUser] = useState<TClinicUser | null>(null);
 
   const { mutateAsync: addCollaborator, isPending: isPendingAddCollaborator } =
     useAddCollaborator();
   const { mutateAsync: changeUserStatus, isPending: isPendingChangeStatus } =
     useChangeUserStatus();
+  const { mutateAsync: changeUserRole, isPending: isPendingChangeRole } =
+    useChangeUserRole();
 
   if (!clinic) return;
 
@@ -48,6 +55,35 @@ const Clinic = () => {
         description: `${data.name} foi adicionado(a) a sua clinica, um email de confirmação foi enviado para ele(a)!`,
       });
       setShowAddCollaboratorModal(false);
+    } catch (err) {
+      notify({
+        type: 'error',
+        title: 'Houve um problema',
+        description: getApiError(err),
+      });
+    }
+  };
+
+  const handleChangeUserRole = async (role: keyof typeof USER_ROLES) => {
+    if (!editingUser) return;
+
+    try {
+      await changeUserRole({
+        id: editingUser.userId,
+        role,
+      });
+
+      notify({
+        type: 'success',
+        title: 'Sucesso',
+        description: (
+          <span>
+            A permissão de <b className="font-semibold">{editingUser.name}</b>{' '}
+            foi atualizada!
+          </span>
+        ),
+      });
+      setEditingUser(null);
     } catch (err) {
       notify({
         type: 'error',
@@ -91,6 +127,14 @@ const Clinic = () => {
         open={showAddCollaboratorModal}
         onClose={() => setShowAddCollaboratorModal(false)}
         onManualAddition={handleManualAddition}
+      />
+
+      <EditRoleModal
+        pending={isPendingChangeRole}
+        open={!!editingUser}
+        user={editingUser}
+        onClose={() => setEditingUser(null)}
+        onSubmit={handleChangeUserRole}
       />
 
       <div className="mb-3 flex items-center justify-between">
@@ -155,7 +199,9 @@ const Clinic = () => {
                     </Button>
                   )}
                   {v.userId !== auth?.user.id && (
-                    <Button type="primary">Editar permissão</Button>
+                    <Button type="primary" onClick={() => setEditingUser(v)}>
+                      Editar permissão
+                    </Button>
                   )}
                 </div>
               ),

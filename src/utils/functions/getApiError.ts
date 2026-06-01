@@ -4,15 +4,14 @@ export const getApiError = (err: any, fallback?: string) => {
     return err[0];
   }
 
-  if (
-    err &&
-    err.response &&
-    err.response.data &&
-    err.response.data.message &&
-    Array.isArray(err.response.data.message) &&
-    err.response.data.message.length > 0
-  ) {
-    return err.response.data.message[0];
+  const message = err?.response?.data?.message;
+
+  if (Array.isArray(message) && message.length > 0) {
+    return message[0];
+  }
+
+  if (typeof message === 'string' && message.length > 0) {
+    return message;
   }
 
   return fallback || 'Estamos passando por instabilidades, tente novamente!';

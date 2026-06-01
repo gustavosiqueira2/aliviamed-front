@@ -11,6 +11,8 @@ import { Breadcrumb, Button, Card, Divider, Typography } from 'antd';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
+import { getApiError } from '@functions/getApiError';
+
 import { useNotificationContext } from '@contexts/NotificationContext';
 
 import { usePatient, useUpdatePatient } from '@store/PatientStore';
@@ -81,8 +83,10 @@ const UpdatePatient = () => {
       notify({
         type: 'error',
         title: 'Houve um problema',
-        description:
+        description: getApiError(
+          err,
           'Não foi possível atualizar a ficha do paciente, tente novamente!',
+        ),
       });
     }
   };
