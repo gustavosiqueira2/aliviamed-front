@@ -49,7 +49,7 @@ const UpdatePatient = () => {
         birthdate: patient.birthdate,
         phone: patient.phone ?? '',
         document: patient.document ?? '',
-        sex: patient.sex as TUpdatePatientForm['sex'],
+        sex: patient.sex || undefined,
         email: patient.email ?? '',
       });
     }
@@ -147,7 +147,7 @@ const UpdatePatient = () => {
               label="CPF"
               optional
               maxLength={14}
-              disabled={isPending}
+              disabled={isPending || !!patient.document}
             />
           </div>
           <div className="mt-2 flex gap-4">

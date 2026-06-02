@@ -8,7 +8,7 @@ import { translateSex } from '@functions/translateSex';
 
 import Timer from '../Timer';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 type TSummaryPatient = {
   name: string;
@@ -34,7 +34,7 @@ const PatientSummaryHeader: React.FC<TPatientSummaryHeaderProps> = (props) => {
     <Card classNames={{ body: 'p-4!' }}>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Avatar size={64} className="bg-blue-200/50!">
+          <Avatar size={64} className="bg-blue-200!">
             <UserRound size={32} className="text-blue-500" />
           </Avatar>
 
@@ -43,26 +43,26 @@ const PatientSummaryHeader: React.FC<TPatientSummaryHeaderProps> = (props) => {
               {patient.name}
             </Title>
 
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
-              <span>{dayjs(patient.birthdate).format('DD/MM/YYYY')}</span>
-              <span>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+              <Text>{dayjs(patient.birthdate).format('DD/MM/YYYY')}</Text>
+              <Text>
                 {age !== null ? `${age} anos` : 'Idade não informada'}
-              </span>
-              {patient.sex && <span>{translateSex(patient.sex)}</span>}
-              {patient.document && <span>CPF: {patient.document}</span>}
+              </Text>
+              {patient.sex && <Text>{translateSex(patient.sex)}</Text>}
+              {patient.document && <Text>CPF: {patient.document}</Text>}
             </div>
 
             {(patient.phone || patient.email) && (
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
                 {patient.phone && (
-                  <span className="flex items-center gap-1">
+                  <Text className="flex items-center gap-1">
                     <Phone size={14} /> {patient.phone}
-                  </span>
+                  </Text>
                 )}
                 {patient.email && (
-                  <span className="flex items-center gap-1">
+                  <Text className="flex items-center gap-1">
                     <Mail size={14} /> {patient.email}
-                  </span>
+                  </Text>
                 )}
               </div>
             )}
@@ -71,10 +71,9 @@ const PatientSummaryHeader: React.FC<TPatientSummaryHeaderProps> = (props) => {
 
         <div className="flex flex-col items-end gap-1">
           {professionalName && (
-            <span className="text-sm text-gray-500">
-              Profissional:{' '}
-              <b className="font-semibold text-gray-700">{professionalName}</b>
-            </span>
+            <Text className="text-sm">
+              Profissional: <b className="font-semibold">{professionalName}</b>
+            </Text>
           )}
 
           <Timer start={dayjs(startedAt)} />

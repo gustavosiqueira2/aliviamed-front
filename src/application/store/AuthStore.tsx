@@ -176,6 +176,8 @@ export const logout = () => {
     null,
   );
 
+  queryClient.clear();
+
   window.localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
   window.localStorage.removeItem(LOCAL_STORAGE_CLINIC_ID);
 };

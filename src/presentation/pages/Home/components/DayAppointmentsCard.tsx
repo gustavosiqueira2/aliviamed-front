@@ -19,7 +19,11 @@ const DayAppointmentsCard: React.FC<TDayAppointmentsCardProps> = (props) => {
 
   return (
     <div className="flex flex-1 flex-col">
-      <Card className="flex-1" classNames={{ body: 'p-4!' }}>
+      <Card
+        variant="borderless"
+        className="flex-1"
+        classNames={{ body: 'p-4!' }}
+      >
         <Title level={5} className="my-0! mb-1!">
           Consultas hoje
         </Title>

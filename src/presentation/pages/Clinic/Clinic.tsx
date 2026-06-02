@@ -193,7 +193,7 @@ const Clinic = () => {
         </Can>
       </div>
 
-      <Card classNames={{ body: 'p-0!' }}>
+      <Card variant="borderless" classNames={{ body: 'p-0!' }}>
         <Table
           dataSource={clinic.participants || []}
           rowKey="id"

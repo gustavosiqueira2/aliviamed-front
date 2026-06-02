@@ -1,4 +1,8 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 
 import dayjs from 'dayjs';
 
@@ -6,6 +10,8 @@ import type { ApiMeta } from '@interfaces/ApiMeta.interface';
 
 import api from '../../services/api';
 import type { TGetConsultApiReturn } from './Consult';
+
+export type PatientSex = 'MALE' | 'FEMALE' | 'OTHER';
 
 interface IPatient {
   id: string;
@@ -15,7 +21,7 @@ interface IPatient {
   birthdate: Date;
   phone?: string;
   document?: string;
-  sex?: string;
+  sex?: PatientSex;
   email?: string;
 }
 
@@ -27,7 +33,7 @@ interface IApiPatient {
   birthdate: string;
   phone?: string;
   document?: string;
-  sex?: string;
+  sex?: PatientSex;
   email?: string;
 }
 
@@ -36,10 +42,17 @@ interface IPatients {
   meta: ApiMeta;
 }
 
-export const usePatients = () =>
+type TPatientsQuery = {
+  search?: string;
+  page?: number;
+  limit?: number;
+};
+
+export const usePatients = (query: TPatientsQuery = {}) =>
   useQuery({
-    queryKey: ['PATIENTS'],
-    queryFn: getPatients,
+    queryKey: ['PATIENTS', query],
+    queryFn: () => getPatients(query),
+    placeholderData: keepPreviousData,
   });
 
 type TGetPatientsResponse = {
@@ -47,8 +60,18 @@ type TGetPatientsResponse = {
   meta: ApiMeta;
 };
 
-const getPatients = async (): Promise<IPatients> => {
-  const { data } = await api.get<TGetPatientsResponse>('/patient');
+const getPatients = async ({
+  search,
+  page,
+  limit,
+}: TPatientsQuery): Promise<IPatients> => {
+  const { data } = await api.get<TGetPatientsResponse>('/patient', {
+    params: {
+      ...(search ? { search } : {}),
+      ...(page ? { page } : {}),
+      ...(limit ? { limit } : {}),
+    },
+  });
 
   const patients: IPatients = {
     ...data,

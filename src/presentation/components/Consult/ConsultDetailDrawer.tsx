@@ -4,7 +4,7 @@ import { Drawer, Typography } from 'antd';
 
 import type { TGetConsultApiReturn } from '@store/Consult';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const FIELDS: {
   key: 'complaint' | 'evolution' | 'diagnosis' | 'prescription' | 'notes';
@@ -36,12 +36,12 @@ const ConsultDetailDrawer: React.FC<TConsultDetailDrawerProps> = (props) => {
     >
       {consult && (
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col text-sm text-gray-500">
-            <span>
+          <div className="flex flex-col">
+            <Text>
               {dayjs(consult.finishedAt ?? consult.startedAt).format(
                 'DD/MM/YYYY [às] HH:mm',
               )}
-            </span>
+            </Text>
             <span>Profissional: {consult.professional.name}</span>
           </div>
 
@@ -50,9 +50,9 @@ const ConsultDetailDrawer: React.FC<TConsultDetailDrawerProps> = (props) => {
               <Title level={5} className="mb-1!">
                 {label}
               </Title>
-              <div className="wrap-break-words text-sm whitespace-pre-wrap text-gray-700">
+              <Text className="wrap-break-words! text-sm! whitespace-pre-wrap!">
                 {consult[key] || 'Não informado'}
-              </div>
+              </Text>
             </div>
           ))}
         </div>

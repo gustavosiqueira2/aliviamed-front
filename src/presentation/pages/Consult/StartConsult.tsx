@@ -86,9 +86,6 @@ const StartConsult = () => {
           subTitle={errDescription}
           extra={[
             <Button onClick={() => navigate(ROUTE_NAMES['/'])}>Voltar</Button>,
-            <Button type="primary" onClick={() => createConsult(appointmentId)}>
-              Tentar novamente
-            </Button>,
           ]}
         />
       ) : (

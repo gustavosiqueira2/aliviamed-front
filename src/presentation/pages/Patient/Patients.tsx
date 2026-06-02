@@ -1,21 +1,43 @@
-import { Button, Card, Table, Typography } from 'antd';
+import { useState } from 'react';
+
+import { Link } from 'react-router';
+
+import { Button, Card, Input, Table, Typography } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 import { usePatients } from '@store/PatientStore';
-import { Link } from 'react-router';
+
+import { useDebounce } from '@hooks/useDebounce';
+
+import { formatDocument } from '@functions/formatDocument';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 import { PERMISSIONS } from '@constants/PERMISSIONS';
 import FadeWrapper from '@components/FadeWrapper';
 import Can from '@components/Can/Can';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Patients = () => {
-  const { data: patients } = usePatients();
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const debouncedSearch = useDebounce(search, 400);
+
+  const { data: patients, isLoading } = usePatients({
+    search: debouncedSearch,
+    page,
+    limit,
+  });
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
 
   return (
-    <FadeWrapper>
-      <div className="mb-3 flex items-center justify-between">
+    <FadeWrapper className="flex flex-col">
+      <div className="mb-2 flex items-center justify-between">
         <Title level={2} className="mb-0!">
           Pacientes
         </Title>
@@ -27,13 +49,46 @@ const Patients = () => {
         </Can>
       </div>
 
-      <Card classNames={{ body: 'p-0!' }}>
+      <Card variant="borderless" classNames={{ body: 'p-0! ' }}>
+        <div className="flex gap-2 p-2">
+          <Input
+            allowClear
+            className="max-w-[320px]"
+            prefix={<SearchOutlined className="text-gray-400" />}
+            placeholder="Buscar por nome ou documento"
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+
+          <Button disabled={!search} onClick={() => handleSearch('')}>
+            Limpar
+          </Button>
+        </div>
+
         <Table
-          dataSource={patients?.data || []}
+          dataSource={patients?.data}
           rowKey="id"
+          loading={isLoading}
+          pagination={{
+            current: page,
+            pageSize: limit,
+            total: patients?.meta.total ?? 0,
+            showTotal: (total) => `${total} paciente${total === 1 ? '' : 's'}`,
+            onChange: (nextPage, nextLimit) => {
+              setPage(nextPage);
+              setLimit(nextLimit);
+            },
+          }}
           columns={[
+            {
+              align: 'center',
+              title: 'Documento',
+              render: (p) => <Text>{formatDocument(p.document)}</Text>,
+              className: 'w-36',
+            },
             { title: 'Nome', dataIndex: 'name' },
             {
+              align: 'center',
               title: 'Data de nascimento',
               dataIndex: 'birthdate',
               render: (v) => new Date(v).toLocaleDateString(),

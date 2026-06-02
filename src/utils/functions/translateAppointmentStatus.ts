@@ -8,6 +8,10 @@ export const translateAppointmentStatus = (
       return 'Agendado';
     case APPOINTMENT_STATUS.CONFIRMED:
       return 'Confirmado';
+    case APPOINTMENT_STATUS.WAITING_CONSULTATION:
+      return 'Aguardando atendimento';
+    case APPOINTMENT_STATUS.IN_CONSULTATION:
+      return 'Em atendimento';
     case APPOINTMENT_STATUS.COMPLETED:
       return 'Completo';
     case APPOINTMENT_STATUS.CANCELED:

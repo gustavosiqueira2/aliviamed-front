@@ -12,6 +12,7 @@ import { PERMISSIONS } from '@constants/PERMISSIONS';
 
 import { calculateAge } from '@functions/calculateAge';
 import { translateSex } from '@functions/translateSex';
+import { formatDocument } from '@functions/formatDocument';
 
 import { usePatient } from '@store/PatientStore';
 import { type TGetConsultApiReturn } from '@store/Consult';
@@ -49,7 +50,9 @@ const PatientDetail = () => {
       />
 
       <div className="flex items-center justify-between">
-        <Title level={2}>Ficha do Paciente</Title>
+        <Title level={2} className="mb-0!">
+          Ficha do Paciente
+        </Title>
 
         <Can permission={PERMISSIONS.PATIENT_UPDATE}>
           <Link to={`${ROUTE_NAMES.PATIENTS}/update/${patientId}`}>
@@ -60,7 +63,7 @@ const PatientDetail = () => {
 
       <Card className="mt-2!">
         <div className="flex items-center gap-4">
-          <Avatar size={64} className="bg-blue-200/50!">
+          <Avatar size={64} className="bg-blue-200!">
             <UserRound size={32} className="text-blue-500" />
           </Avatar>
 
@@ -78,7 +81,9 @@ const PatientDetail = () => {
               </Paragraph>
             )}
             {patient.document && (
-              <Paragraph className="my-0!">CPF: {patient.document}</Paragraph>
+              <Paragraph className="my-0!">
+                CPF: {formatDocument(patient.document)}
+              </Paragraph>
             )}
             {patient.phone && (
               <Paragraph className="my-0!">Telefone: {patient.phone}</Paragraph>
@@ -91,7 +96,10 @@ const PatientDetail = () => {
       </Card>
 
       <Can permission={PERMISSIONS.CONSULT_VIEW}>
-        <Card className="mt-4!" classNames={{ body: 'flex flex-col p-0! pb-4' }}>
+        <Card
+          className="mt-4!"
+          classNames={{ body: 'flex flex-col p-0! pb-4' }}
+        >
           <div className="p-4 pb-0">
             <Title level={4} className="my-0!">
               Histórico de consultas

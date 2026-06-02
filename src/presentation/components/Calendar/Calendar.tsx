@@ -45,6 +45,7 @@ const Calendar: React.FC<TCalendarProps> = (props) => {
 
   return (
     <Card
+      variant="borderless"
       className="mt-2! overflow-hidden"
       classNames={{ body: 'p-0! flex h-full overflow-hidden' }}
     >

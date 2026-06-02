@@ -12,9 +12,12 @@ const { Title } = Typography;
 
 type TQueueCardProps = {
   appointments: TAppointment[];
+  isAConsultActive: boolean;
 };
 
-const QueueCard: React.FC<TQueueCardProps> = ({ appointments }) => {
+const QueueCard: React.FC<TQueueCardProps> = (props) => {
+  const { appointments, isAConsultActive } = props;
+
   const navigate = useNavigate();
 
   const handleStartConsult = (appointmentId: string) => {
@@ -23,6 +26,7 @@ const QueueCard: React.FC<TQueueCardProps> = ({ appointments }) => {
 
   return (
     <Card
+      variant="borderless"
       className="flex flex-1"
       classNames={{ body: 'p-4! flex-1 flex flex-col' }}
     >
@@ -34,6 +38,7 @@ const QueueCard: React.FC<TQueueCardProps> = ({ appointments }) => {
         <div className="flex flex-col gap-1">
           {appointments.map((appointment) => (
             <QueuePatient
+              disabled={isAConsultActive}
               key={`queue-${appointment.id}`}
               appointment={appointment}
               onStartConsult={handleStartConsult}

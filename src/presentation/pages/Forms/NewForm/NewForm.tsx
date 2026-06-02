@@ -126,6 +126,7 @@ const NewForm = () => {
 
       <div className="flex flex-col gap-4">
         <Card
+          variant="borderless"
           className="mt-2! overflow-hidden"
           classNames={{ body: 'p-0! flex flex-col' }}
         >
@@ -152,7 +153,7 @@ const NewForm = () => {
                   Icon={
                     <group.Icon className={`text-${group.iconColor}-500!`} />
                   }
-                  iconBgColorClass={`bg-${group.iconColor}-200/50!`}
+                  iconBgColorClass={`bg-${group.iconColor}-200!`}
                   title={group.title}
                   description={group.description}
                   added={inputGroups.includes(group)}
@@ -168,7 +169,11 @@ const NewForm = () => {
         </Card>
 
         <div className="flex gap-4">
-          <Card className="flex-1" classNames={{ body: 'p-0!' }}>
+          <Card
+            variant="borderless"
+            className="flex-1"
+            classNames={{ body: 'p-0!' }}
+          >
             <div className="flex flex-col p-4 pb-0">
               <Title level={5}>2. Formulário</Title>
               <div className="flex flex-col gap-4">
@@ -192,7 +197,7 @@ const NewForm = () => {
               icon={<Lightbulb size={18} color={colorPrimary} />}
               title={
                 <Text style={{ color: colorPrimary }}>
-                  <b className="font-semibold text-gray-900">Dica:</b> Você pode
+                  <b className="font-semibold">Dica:</b> Você pode
                   <b> arrastar</b> os grupos no preview para <b>reordenar</b>!
                 </Text>
               }
@@ -217,7 +222,7 @@ const NewForm = () => {
                   shape="circle"
                   size={32}
                   icon={<UserRound size={16} className="text-blue-500!" />}
-                  className="bg-blue-200/50!"
+                  className="bg-blue-200!"
                 />
 
                 <Title level={5} className="mb-0!">
@@ -228,9 +233,7 @@ const NewForm = () => {
               <Paragraph className="mt-2 mb-0! font-semibold!">
                 Campos do grupo
               </Paragraph>
-              <Text className="text-gray-500!">
-                Arraste para reordenar o grupo.
-              </Text>
+              <Text>Arraste para reordenar o grupo.</Text>
             </div>
 
             <Divider className="my-0!" />

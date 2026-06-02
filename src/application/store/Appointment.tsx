@@ -210,9 +210,11 @@ export const useChangeAppointmentStatus = () =>
 const changeAppointmentStatus = async ({
   appointment,
   status,
+  cancelReason,
 }: {
   appointment: TAppointment;
   status: TChangeStatusOptions;
+  cancelReason?: string;
 }) => {
   await api.patch(
     `/appointment/${appointment.id}/${
@@ -226,5 +228,6 @@ const changeAppointmentStatus = async ({
               ? 'no-show'
               : status === APPOINTMENT_STATUS.CANCELED && 'cancel'
     }`,
+    status === APPOINTMENT_STATUS.CANCELED ? { cancelReason } : undefined,
   );
 };

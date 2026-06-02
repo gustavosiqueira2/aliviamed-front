@@ -7,19 +7,15 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import dayjs from 'dayjs';
 
-import { ConfigProvider } from 'antd';
-import ptBR from 'antd/locale/pt_BR';
-
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@store/QueryClient';
-
-import { theme } from '@assets/theme';
 
 import MainRoutes from '@routes/Main.routes';
 
 import NotificationProvider from '@contexts/NotificationContext';
 import AuthProvider from '@contexts/AuthContext';
+import ThemeProvider from '@contexts/ThemeContext';
 
 import './index.css';
 
@@ -36,11 +32,11 @@ createRoot(document.getElementById('root')!).render(
 
       <NotificationProvider>
         <AuthProvider>
-          <ConfigProvider theme={theme} locale={ptBR}>
+          <ThemeProvider>
             <BrowserRouter>
               <MainRoutes />
             </BrowserRouter>
-          </ConfigProvider>
+          </ThemeProvider>
         </AuthProvider>
       </NotificationProvider>
     </QueryClientProvider>

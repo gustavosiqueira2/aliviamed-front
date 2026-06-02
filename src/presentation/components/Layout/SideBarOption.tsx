@@ -12,7 +12,7 @@ import {
 import { ROUTE_NAMES, type ROUTE_NAME } from '@constants/ROUTE_NAMES';
 import { PERMISSIONS, type TPermission } from '@constants/PERMISSIONS';
 
-import { logout, useAuth } from '@store/AuthStore';
+import { useAuth } from '@store/AuthStore';
 
 import { usePermissions } from '@hooks/usePermissions';
 
@@ -127,10 +127,10 @@ const SideBarOption = (
         icon: <Hospital size={18} color="#52525b" />,
       },
       {
-        key: 'settings',
+        key: ROUTE_NAMES.SETTINGS,
         label: 'Configurações',
         icon: <Settings size={18} color="#52525b" />,
-        onClick: () => logout(),
+        onClick: () => handleNavigate(ROUTE_NAMES.SETTINGS),
       },
     ],
   };

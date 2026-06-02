@@ -28,6 +28,8 @@ import Financial from '@pages/Financial/Financial';
 
 import Clinic from '@pages/Clinic/Clinic';
 
+import Settings from '@pages/Settings/Settings';
+
 import Page404 from '@pages/404';
 
 const AppRoutes = () => (
@@ -102,6 +104,8 @@ const AppRoutes = () => (
       <Route path={ROUTE_NAMES.FINANCIAL} element={<Financial />} />
 
       <Route path={ROUTE_NAMES.CLINIC} element={<Clinic />} />
+
+      <Route path={ROUTE_NAMES.SETTINGS} element={<Settings />} />
 
       <Route path="*" element={<Page404 />} />
 

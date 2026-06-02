@@ -43,7 +43,10 @@ const Home = () => {
         <div className="flex gap-4">
           <DayAppointmentsCard appointments={dayAppointments} />
 
-          <QueueCard appointments={queueAppointments} />
+          <QueueCard
+            appointments={queueAppointments}
+            isAConsultActive={!!activeConsult}
+          />
         </div>
       </div>
     </FadeWrapper>

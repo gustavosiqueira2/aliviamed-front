@@ -1,9 +1,11 @@
 import dayjs from 'dayjs';
 
-import { Empty, List, Skeleton } from 'antd';
+import { Empty, List, Skeleton, Typography } from 'antd';
 
 import { usePatientConsultHistory } from '@store/PatientStore';
 import { type TGetConsultApiReturn } from '@store/Consult';
+
+const { Text } = Typography;
 
 type TPreviousConsultsListProps = {
   patientId?: string;
@@ -46,21 +48,21 @@ const PreviousConsultsList: React.FC<TPreviousConsultsListProps> = (props) => {
       rowKey="id"
       renderItem={(consult) => (
         <List.Item
-          className="cursor-pointer px-4! py-2! transition-colors hover:bg-gray-50"
+          className="cursor-pointer px-4! py-2! transition-opacity hover:opacity-85"
           onClick={() => onSelect(consult)}
         >
           <List.Item.Meta
             title={dayjs(consult.finishedAt).format('DD/MM/YYYY [às] HH:mm')}
             description={
               <span className="flex flex-col">
-                <span className="text-xs text-gray-400">
+                <Text className="text-xs! font-semibold!">
                   {consult.professional.name}
-                </span>
-                <span className="line-clamp-2 text-xs text-gray-500">
+                </Text>
+                <Text className="line-clamp-2 text-xs!">
                   {consult.diagnosis ||
                     consult.complaint ||
                     'Sem anotações registradas'}
-                </span>
+                </Text>
               </span>
             }
           />

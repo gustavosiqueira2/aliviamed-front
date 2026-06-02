@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
 
-import { Button, Divider, Popconfirm, Tooltip } from 'antd';
+import { Button, Divider, Tooltip } from 'antd';
 import { Bookmark, Calendar, Clock } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 
@@ -37,6 +37,7 @@ import FadeWrapper from '@components/FadeWrapper';
 import AppointmentDetailsHeader from './components/AppointmentDetailsHeader';
 import AppointmentDetailsEmpty from './components/AppointmentDetailsEmpty';
 import AppointmentDetailsInfo from './components/AppointmentDetailsInfo';
+import CancelAppointmentModal from './CancelAppointmentModal';
 import {
   RescheduleAppointmentSchema,
   type RescheduleAppointmentForm,
@@ -68,6 +69,7 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
     useChangeAppointmentStatus();
 
   const [isRescheduling, setIsRescheduling] = useState(false);
+  const [isCanceling, setIsCanceling] = useState(false);
 
   useEffect(() => {
     reset();
@@ -81,11 +83,14 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
     }
   }, [appointment, reset, setValue]);
 
-  const handleChangeStatus = async (status: TChangeStatusOptions) => {
+  const handleChangeStatus = async (
+    status: TChangeStatusOptions,
+    cancelReason?: string,
+  ) => {
     try {
       if (!appointment) return;
 
-      await changeAppointmentStatus({ appointment, status });
+      await changeAppointmentStatus({ appointment, status, cancelReason });
 
       notify({
         type: 'success',
@@ -133,8 +138,9 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
     : [];
 
   return (
-    <AnimatePresence mode="wait">
-      {appointment ? (
+    <>
+      <AnimatePresence mode="wait">
+        {appointment ? (
         <FadeWrapper duration={0.1} key="details" className="w-65 p-6 py-4">
           <form
             onSubmit={handleSubmit(handleReschedule, (e) => console.log(e))}
@@ -308,18 +314,12 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
                 )}
                 {canChangeAppointmentStatus(appointment.status, 'cancel') && (
                   <Can permission={PERMISSIONS.APPOINTMENT_CANCEL}>
-                    <Popconfirm
-                      title="Cancelar"
-                      description="Tem certeza que deseja cancelar o Agendamento?"
-                      okText="Sim"
-                      cancelText="Não"
+                    <Button
                       disabled={isPending}
-                      onConfirm={() =>
-                        handleChangeStatus(APPOINTMENT_STATUS.CANCELED)
-                      }
+                      onClick={() => setIsCanceling(true)}
                     >
-                      <Button>Cancelar</Button>
-                    </Popconfirm>
+                      Cancelar
+                    </Button>
                   </Can>
                 )}
                 {canChangeAppointmentStatus(
@@ -346,7 +346,19 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
       ) : (
         <AppointmentDetailsEmpty />
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+
+      <CancelAppointmentModal
+        open={isCanceling}
+        appointment={appointment}
+        isPending={isPending}
+        onClose={() => setIsCanceling(false)}
+        onConfirm={async (cancelReason) => {
+          await handleChangeStatus(APPOINTMENT_STATUS.CANCELED, cancelReason);
+          setIsCanceling(false);
+        }}
+      />
+    </>
   );
 };
 

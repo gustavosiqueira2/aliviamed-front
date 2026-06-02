@@ -50,7 +50,12 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
         collapsed={collapsed}
         className="*:flex *:flex-col"
       >
-        <div className="flex w-full items-center justify-between pt-2 pr-1 pb-1 pl-2">
+        <div
+          style={{
+            backgroundColor: colorBgLayout,
+          }}
+          className="flex w-full items-center justify-between pt-2 pr-1 pb-1 pl-2"
+        >
           <Button
             type="text"
             shape="circle"
@@ -67,7 +72,7 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
               fontSize: 8,
             }}
           >
-            <FoldHorizontal size={16} className="text-gray-700" />
+            <FoldHorizontal size={16} />
           </Button>
         </div>
 
@@ -76,7 +81,7 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
             theme="dark"
             mode="inline"
             selectedKeys={[selectedRoute]}
-            className="*:px-2.5! [&_.ant-menu-item:not(.ant-menu-item-selected)]:text-gray-700!"
+            className="flex-1 *:px-2.5! [&_.ant-menu-item:not(.ant-menu-item-selected)]:text-gray-700!"
             style={{ backgroundColor: colorBgLayout }}
             items={SideBarOption(handleNavigate, selectedRoute).start}
           />

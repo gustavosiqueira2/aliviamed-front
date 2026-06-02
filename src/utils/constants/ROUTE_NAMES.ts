@@ -25,4 +25,6 @@ export const ROUTE_NAMES = {
   FINANCIAL: '/financial',
 
   CLINIC: '/clinic',
+
+  SETTINGS: '/settings',
 } as const;

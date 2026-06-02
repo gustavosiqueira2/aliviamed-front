@@ -7,7 +7,7 @@ import { formatTimerRange } from '@functions/formatTimerRange';
 
 import { useNow } from '@hooks/useNow';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 type TTimerProps = {
   start: Dayjs;
@@ -23,18 +23,18 @@ const Timer: React.FC<TTimerProps> = ({ start }) => {
   return (
     <div className="flex flex-col items-end justify-end">
       <div className="flex items-center gap-1">
-        <Title level={5} className="my-0! text-gray-700!">
+        <Title level={5} className="my-0!">
           {startFormatted}
         </Title>
 
-        <MoveRight size={16} className="text-gray-700!" />
+        <MoveRight size={16} />
 
-        <Title level={5} className="my-0! text-gray-700!">
+        <Title level={5} className="my-0!">
           {endFormatted}
         </Title>
       </div>
 
-      <span className="text-sm text-gray-500">{duration}</span>
+      <Text className="text-sm!">{duration}</Text>
     </div>
   );
 };
