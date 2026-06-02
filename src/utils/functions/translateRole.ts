@@ -8,5 +8,7 @@ export const translateRole = (role: keyof typeof USER_ROLES) => {
       return 'Profissional';
     case USER_ROLES.RECEPTION:
       return 'Recepcionista';
+    case USER_ROLES.CUSTOM:
+      return 'Personalizado';
   }
 };

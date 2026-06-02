@@ -8,6 +8,7 @@ import { Save } from 'lucide-react';
 import { Alert, Button, Card, Popconfirm, theme, Typography } from 'antd';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
+import { PERMISSIONS } from '@constants/PERMISSIONS';
 
 import {
   useConsultByAppointmentId,
@@ -19,6 +20,7 @@ import { usePatient } from '@store/PatientStore';
 
 import { useDebounce } from '@hooks/useDebounce';
 
+import Can from '@components/Can/Can';
 import TextAreaInput from '@components/Form/TextAreaInput';
 import FadeWrapper from '@components/FadeWrapper';
 
@@ -223,17 +225,19 @@ const Consult = () => {
         </div>
 
         <div className="mt-4 flex justify-end">
-          <Popconfirm
-            title="Confirmar"
-            description="Tem certeza que deseja finalizar a consulta?"
-            okText="Finalizar"
-            cancelText="Cancelar"
-            onConfirm={handleFinish}
-          >
-            <Button type="primary" size="large" disabled={isPendingFinish}>
-              Finalizar
-            </Button>
-          </Popconfirm>
+          <Can permission={PERMISSIONS.CONSULT_FINISH}>
+            <Popconfirm
+              title="Confirmar"
+              description="Tem certeza que deseja finalizar a consulta?"
+              okText="Finalizar"
+              cancelText="Cancelar"
+              onConfirm={handleFinish}
+            >
+              <Button type="primary" size="large" disabled={isPendingFinish}>
+                Finalizar
+              </Button>
+            </Popconfirm>
+          </Can>
         </div>
       </form>
 

@@ -8,6 +8,7 @@ import { Avatar, Breadcrumb, Button, Card, Typography } from 'antd';
 import { UserRound } from 'lucide-react';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
+import { PERMISSIONS } from '@constants/PERMISSIONS';
 
 import { calculateAge } from '@functions/calculateAge';
 import { translateSex } from '@functions/translateSex';
@@ -15,6 +16,7 @@ import { translateSex } from '@functions/translateSex';
 import { usePatient } from '@store/PatientStore';
 import { type TGetConsultApiReturn } from '@store/Consult';
 
+import Can from '@components/Can/Can';
 import PreviousConsultsList from '@components/Consult/PreviousConsultsList';
 import ConsultDetailDrawer from '@components/Consult/ConsultDetailDrawer';
 
@@ -49,9 +51,11 @@ const PatientDetail = () => {
       <div className="flex items-center justify-between">
         <Title level={2}>Ficha do Paciente</Title>
 
-        <Link to={`${ROUTE_NAMES.PATIENTS}/update/${patientId}`}>
-          <Button type="primary">Editar ficha</Button>
-        </Link>
+        <Can permission={PERMISSIONS.PATIENT_UPDATE}>
+          <Link to={`${ROUTE_NAMES.PATIENTS}/update/${patientId}`}>
+            <Button type="primary">Editar ficha</Button>
+          </Link>
+        </Can>
       </div>
 
       <Card className="mt-2!">
@@ -86,18 +90,20 @@ const PatientDetail = () => {
         </div>
       </Card>
 
-      <Card className="mt-4!" classNames={{ body: 'flex flex-col p-0! pb-4' }}>
-        <div className="p-4 pb-0">
-          <Title level={4} className="my-0!">
-            Histórico de consultas
-          </Title>
-        </div>
+      <Can permission={PERMISSIONS.CONSULT_VIEW}>
+        <Card className="mt-4!" classNames={{ body: 'flex flex-col p-0! pb-4' }}>
+          <div className="p-4 pb-0">
+            <Title level={4} className="my-0!">
+              Histórico de consultas
+            </Title>
+          </div>
 
-        <PreviousConsultsList
-          patientId={patientId}
-          onSelect={setSelectedConsult}
-        />
-      </Card>
+          <PreviousConsultsList
+            patientId={patientId}
+            onSelect={setSelectedConsult}
+          />
+        </Card>
+      </Can>
 
       <ConsultDetailDrawer
         consult={selectedConsult}

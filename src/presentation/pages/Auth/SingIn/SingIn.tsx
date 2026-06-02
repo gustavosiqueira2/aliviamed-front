@@ -97,14 +97,16 @@ const SingIn = () => {
         </div>
 
         <div className="mt-1 flex items-center justify-end">
-          <Button
-            size="small"
-            type="text"
-            disabled={isPending}
-            className="!px-[1px]! p-0! hover:underline"
-          >
-            esqueceu sua senha?
-          </Button>
+          <Link to={ROUTE_NAMES.FORGOT_PASSWORD}>
+            <Button
+              size="small"
+              type="text"
+              disabled={isPending}
+              className="!px-[1px]! p-0! hover:underline"
+            >
+              esqueceu sua senha?
+            </Button>
+          </Link>
         </div>
 
         <Button

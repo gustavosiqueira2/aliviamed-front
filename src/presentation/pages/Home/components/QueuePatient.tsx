@@ -3,11 +3,15 @@ import dayjs from 'dayjs';
 import { Avatar, Button, Card } from 'antd';
 import { UserRound } from 'lucide-react';
 
+import { PERMISSIONS } from '@constants/PERMISSIONS';
+
 import { formatTimerRange } from '@functions/formatTimerRange';
 
 import { useNow } from '@hooks/useNow';
 
 import type { TAppointment } from '@store/Appointment';
+
+import Can from '@components/Can/Can';
 
 type TQueuePatientProps = {
   appointment: TAppointment;
@@ -45,13 +49,15 @@ const QueuePatient: React.FC<TQueuePatientProps> = (props) => {
         </span>
       </div>
 
-      <Button
-        className="ml-2! rounded-sm!"
-        type="primary"
-        onClick={() => onStartConsult(appointment.id)}
-      >
-        Atender
-      </Button>
+      <Can permission={PERMISSIONS.CONSULT_START}>
+        <Button
+          className="ml-2! rounded-sm!"
+          type="primary"
+          onClick={() => onStartConsult(appointment.id)}
+        >
+          Atender
+        </Button>
+      </Can>
     </Card>
   );
 };

@@ -4,7 +4,9 @@ import { usePatients } from '@store/PatientStore';
 import { Link } from 'react-router';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
+import { PERMISSIONS } from '@constants/PERMISSIONS';
 import FadeWrapper from '@components/FadeWrapper';
+import Can from '@components/Can/Can';
 
 const { Title } = Typography;
 
@@ -18,9 +20,11 @@ const Patients = () => {
           Pacientes
         </Title>
 
-        <Link to={ROUTE_NAMES.NEW_PATIENT}>
-          <Button type="primary">Cadastrar novo</Button>
-        </Link>
+        <Can permission={PERMISSIONS.PATIENT_CREATE}>
+          <Link to={ROUTE_NAMES.NEW_PATIENT}>
+            <Button type="primary">Cadastrar novo</Button>
+          </Link>
+        </Can>
       </div>
 
       <Card classNames={{ body: 'p-0!' }}>
@@ -37,9 +41,11 @@ const Patients = () => {
             {
               render: (v) => (
                 <div className="flex justify-end gap-2">
-                  <Link to={`update/${v.id}`}>
-                    <Button>Editar ficha</Button>
-                  </Link>
+                  <Can permission={PERMISSIONS.PATIENT_UPDATE}>
+                    <Link to={`update/${v.id}`}>
+                      <Button>Editar ficha</Button>
+                    </Link>
+                  </Can>
                   <Link to={v.id}>
                     <Button type="primary">Detalhes</Button>
                   </Link>

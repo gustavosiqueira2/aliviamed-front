@@ -1,6 +1,4 @@
-import { useState } from 'react';
-
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,16 +9,19 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
+import { useAuthUser, useRegister } from '@store/AuthStore';
+
 import PhoneInput from '@components/Form/PhoneInput';
 import DateInput from '@components/Form/DateInput';
 import TextInput from '@components/Form/TextInput';
+
+import { getApiError } from '@functions/getApiError';
 
 import { signUpSchema, type TSignUpForm } from './SignUpSchema';
 
 const SignUp = () => {
   const { notify } = useNotificationContext();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { control, handleSubmit } = useForm<TSignUpForm>({
     resolver: zodResolver(signUpSchema),
@@ -30,23 +31,31 @@ const SignUp = () => {
     token: { colorPrimary },
   } = theme.useToken();
 
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: registerUser, isPending: registering } = useRegister();
+  const { mutateAsync: authUser, isPending: authenticating } = useAuthUser();
+
+  const loading = registering || authenticating;
 
   const onSubmit = async (form: TSignUpForm) => {
     try {
-      setLoading(true);
-
-      const body = {
-        phone: form.phone,
+      await registerUser({
+        name: form.name,
         email: form.email,
         password: form.password,
-        user: {
-          name: form.name,
-          age: form.birthdate,
-        },
-      };
+        phone: form.phone,
+        birthdate: form.birthdate,
+      });
+    } catch (err) {
+      notify({
+        type: 'error',
+        title: 'Não foi possível cadastrar',
+        description: getApiError(err, 'Verifique os dados e tente novamente.'),
+      });
+      return;
+    }
 
-      console.log('🚀 > onSubmit > body:', body);
+    try {
+      await authUser({ email: form.email, password: form.password });
 
       notify({
         type: 'success',
@@ -54,20 +63,15 @@ const SignUp = () => {
         description: 'Seu cadastro no Aliviamed foi realizado!',
       });
 
-      navigate(`${ROUTE_NAMES['/']}/${location.search}`, {
-        replace: true,
-      });
-    } catch (err) {
-      console.error(err);
-
+      navigate(ROUTE_NAMES['/'], { replace: true });
+    } catch {
       notify({
-        type: 'error',
-        title: 'Houve algo inesperado',
-        description:
-          'Não conseguimos cadastrar usuário. Verifique os dados e tente novamente.',
+        type: 'info',
+        title: 'Conta criada',
+        description: 'Faça login para entrar na aplicação.',
       });
-    } finally {
-      setLoading(false);
+
+      navigate(ROUTE_NAMES.SIGN_IN, { replace: true });
     }
   };
 

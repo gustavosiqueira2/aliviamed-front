@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router';
 import { Alert, Button, theme, Typography } from 'antd';
 import { Podcast } from 'lucide-react';
 
+import { PERMISSIONS } from '@constants/PERMISSIONS';
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
+
+import Can from '@components/Can/Can';
 
 const { Title } = Typography;
 
@@ -35,12 +38,14 @@ const OpenedConsultCard: React.FC<TOpenedConsultCardProps> = (props) => {
             Você tem uma consulta com <b> {patientName}</b> em andamento!{' '}
           </Title>
 
-          <Button
-            type="primary"
-            onClick={() => navigate(`${ROUTE_NAMES.CONSULT}/${appointmentId}`)}
-          >
-            Continuar consulta
-          </Button>
+          <Can permission={PERMISSIONS.CONSULT_UPDATE}>
+            <Button
+              type="primary"
+              onClick={() => navigate(`${ROUTE_NAMES.CONSULT}/${appointmentId}`)}
+            >
+              Continuar consulta
+            </Button>
+          </Can>
         </div>
       }
     />

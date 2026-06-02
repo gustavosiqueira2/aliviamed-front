@@ -10,14 +10,18 @@ import {
 } from 'lucide-react';
 
 import { ROUTE_NAMES, type ROUTE_NAME } from '@constants/ROUTE_NAMES';
+import { PERMISSIONS, type TPermission } from '@constants/PERMISSIONS';
 
 import { logout, useAuth } from '@store/AuthStore';
+
+import { usePermissions } from '@hooks/usePermissions';
 
 const SideBarOption = (
   handleNavigate: (route: ROUTE_NAME) => void,
   selectedRoute: ROUTE_NAME,
 ) => {
   const { data } = useAuth();
+  const { hasPermission } = usePermissions();
 
   const getIconColor = (defaultColor: string, route: ROUTE_NAME) => {
     if (route === selectedRoute) {
@@ -27,15 +31,18 @@ const SideBarOption = (
     return { color: defaultColor };
   };
 
-  return {
-    start: [
-      {
+  const start: { permission?: TPermission; item: Record<string, unknown> }[] = [
+    {
+      item: {
         key: '/',
         label: 'Home',
         icon: <House size={18} {...getIconColor('#7c3aed', '/')} />,
         onClick: () => handleNavigate('/'),
       },
-      {
+    },
+    {
+      permission: PERMISSIONS.PATIENT_VIEW,
+      item: {
         key: ROUTE_NAMES.PATIENTS,
         label: 'Pacientes',
         icon: (
@@ -46,7 +53,10 @@ const SideBarOption = (
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.PATIENTS),
       },
-      {
+    },
+    {
+      permission: PERMISSIONS.APPOINTMENT_VIEW,
+      item: {
         key: ROUTE_NAMES.APPOINTMENTS,
         label: 'Agenda',
         icon: (
@@ -57,7 +67,9 @@ const SideBarOption = (
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.APPOINTMENTS),
       },
-      {
+    },
+    {
+      item: {
         key: ROUTE_NAMES.FORMS,
         label: 'Formulários',
         icon: (
@@ -65,7 +77,9 @@ const SideBarOption = (
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.FORMS),
       },
-      {
+    },
+    {
+      item: {
         key: ROUTE_NAMES.PATIENT_WORKFLOW,
         label: 'Eventos',
         icon: (
@@ -76,7 +90,9 @@ const SideBarOption = (
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.PATIENT_WORKFLOW),
       },
-      {
+    },
+    {
+      item: {
         key: ROUTE_NAMES.FINANCIAL,
         label: 'Financeiro',
         icon: (
@@ -87,18 +103,23 @@ const SideBarOption = (
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.FINANCIAL),
       },
-      {
+    },
+    {
+      item: {
         key: ROUTE_NAMES.CLINIC,
         label: 'Clinica',
         icon: (
-          <Hospital
-            size={18}
-            {...getIconColor('#e11d48', ROUTE_NAMES.CLINIC)}
-          />
+          <Hospital size={18} {...getIconColor('#e11d48', ROUTE_NAMES.CLINIC)} />
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.CLINIC),
       },
-    ],
+    },
+  ];
+
+  return {
+    start: start
+      .filter((entry) => !entry.permission || hasPermission(entry.permission))
+      .map((entry) => entry.item),
     end: [
       {
         key: 'selected-clinic',

@@ -12,6 +12,7 @@ import { AnimatePresence } from 'framer-motion';
 import { APPOINTMENT_STATUS } from '@constants/APPOINTMENT_STATUS';
 import { EVENT_COLOR } from '@constants/EVENT_COLOR';
 import { DAY_HOURS } from '@constants/DAY_HOURS';
+import { PERMISSIONS } from '@constants/PERMISSIONS';
 
 import { canChangeAppointmentStatus } from '@functions/canChangeAppointmentStatus ';
 import { translateAppointmentStatus } from '@functions/translateAppointmentStatus';
@@ -27,6 +28,7 @@ import {
   type TChangeStatusOptions,
 } from '@store/Appointment';
 
+import Can from '@components/Can/Can';
 import PopConfirmDefault from '@components/PopConfirmDefault';
 import SelectInput from '@components/Form/SelectInput';
 import DateInput from '@components/Form/DateInput';
@@ -209,13 +211,15 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
 
             {isRescheduling ? (
               <div className="mb-3 flex flex-col gap-2">
-                <Button
-                  disabled={!formState.isValid}
-                  type="primary"
-                  htmlType="submit"
-                >
-                  Reagendar
-                </Button>
+                <Can permission={PERMISSIONS.APPOINTMENT_RESCHEDULE}>
+                  <Button
+                    disabled={!formState.isValid}
+                    type="primary"
+                    htmlType="submit"
+                  >
+                    Reagendar
+                  </Button>
+                </Can>
 
                 <Button onClick={() => setIsRescheduling(false)}>
                   Cancelar
@@ -224,100 +228,112 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
             ) : (
               <div className="mb-3 flex flex-col gap-2">
                 {canChangeAppointmentStatus(appointment.status, 'confirm') && (
-                  <PopConfirmDefault
-                    title="Cancelar"
-                    description="Tem certeza que confirmar o Agendamento?"
-                    disabled={isPending}
-                    onConfirm={() =>
-                      handleChangeStatus(APPOINTMENT_STATUS.CONFIRMED)
-                    }
-                  >
-                    <Button type="primary">Confirmar</Button>
-                  </PopConfirmDefault>
+                  <Can permission={PERMISSIONS.APPOINTMENT_MANAGE_STATUS}>
+                    <PopConfirmDefault
+                      title="Cancelar"
+                      description="Tem certeza que confirmar o Agendamento?"
+                      disabled={isPending}
+                      onConfirm={() =>
+                        handleChangeStatus(APPOINTMENT_STATUS.CONFIRMED)
+                      }
+                    >
+                      <Button type="primary">Confirmar</Button>
+                    </PopConfirmDefault>
+                  </Can>
                 )}
                 {canChangeAppointmentStatus(
                   appointment.status,
                   'waitingConsultation',
                 ) && (
-                  <PopConfirmDefault
-                    title="Check-in"
-                    description="Confirmar entrada na fila?"
-                    disabled={isPending}
-                    onConfirm={() =>
-                      handleChangeStatus(
-                        APPOINTMENT_STATUS.WAITING_CONSULTATION,
-                      )
-                    }
-                  >
-                    <Tooltip
-                      placement="bottom"
-                      title={'Colocar o paciente na fila de espera'}
-                    >
-                      <Button type="primary">Check-in</Button>
-                    </Tooltip>
-                  </PopConfirmDefault>
-                )}
-                {canChangeAppointmentStatus(appointment.status, 'complete') && (
-                  <PopConfirmDefault
-                    title="Completar"
-                    description="Tem certeza que completar o Agendamento?"
-                    disabled={isPending}
-                    onConfirm={() =>
-                      handleChangeStatus(APPOINTMENT_STATUS.COMPLETED)
-                    }
-                  >
-                    <Button type="primary">Completar</Button>
-                  </PopConfirmDefault>
-                )}
-                {canChangeAppointmentStatus(appointment.status, 'noShow') && (
-                  <PopConfirmDefault
-                    title="Não Compareceu"
-                    description="Tem certeza que o paciente não apareceu no Agendamento?"
-                    disabled={isPending}
-                    onConfirm={() =>
-                      handleChangeStatus(APPOINTMENT_STATUS.NO_SHOW)
-                    }
-                  >
-                    <Tooltip
-                      placement="bottom"
-                      title={
-                        dayjs(appointment.endsAt).isAfter(dayjs())
-                          ? 'O Data do agendamento ainda não passou!'
-                          : ''
+                  <Can permission={PERMISSIONS.APPOINTMENT_MANAGE_STATUS}>
+                    <PopConfirmDefault
+                      title="Check-in"
+                      description="Confirmar entrada na fila?"
+                      disabled={isPending}
+                      onConfirm={() =>
+                        handleChangeStatus(
+                          APPOINTMENT_STATUS.WAITING_CONSULTATION,
+                        )
                       }
                     >
-                      <Button
-                        disabled={dayjs(appointment.endsAt).isAfter(dayjs())}
+                      <Tooltip
+                        placement="bottom"
+                        title={'Colocar o paciente na fila de espera'}
                       >
-                        Não apareceu
-                      </Button>
-                    </Tooltip>
-                  </PopConfirmDefault>
+                        <Button type="primary">Check-in</Button>
+                      </Tooltip>
+                    </PopConfirmDefault>
+                  </Can>
+                )}
+                {canChangeAppointmentStatus(appointment.status, 'complete') && (
+                  <Can permission={PERMISSIONS.APPOINTMENT_MANAGE_STATUS}>
+                    <PopConfirmDefault
+                      title="Completar"
+                      description="Tem certeza que completar o Agendamento?"
+                      disabled={isPending}
+                      onConfirm={() =>
+                        handleChangeStatus(APPOINTMENT_STATUS.COMPLETED)
+                      }
+                    >
+                      <Button type="primary">Completar</Button>
+                    </PopConfirmDefault>
+                  </Can>
+                )}
+                {canChangeAppointmentStatus(appointment.status, 'noShow') && (
+                  <Can permission={PERMISSIONS.APPOINTMENT_MANAGE_STATUS}>
+                    <PopConfirmDefault
+                      title="Não Compareceu"
+                      description="Tem certeza que o paciente não apareceu no Agendamento?"
+                      disabled={isPending}
+                      onConfirm={() =>
+                        handleChangeStatus(APPOINTMENT_STATUS.NO_SHOW)
+                      }
+                    >
+                      <Tooltip
+                        placement="bottom"
+                        title={
+                          dayjs(appointment.endsAt).isAfter(dayjs())
+                            ? 'O Data do agendamento ainda não passou!'
+                            : ''
+                        }
+                      >
+                        <Button
+                          disabled={dayjs(appointment.endsAt).isAfter(dayjs())}
+                        >
+                          Não apareceu
+                        </Button>
+                      </Tooltip>
+                    </PopConfirmDefault>
+                  </Can>
                 )}
                 {canChangeAppointmentStatus(appointment.status, 'cancel') && (
-                  <Popconfirm
-                    title="Cancelar"
-                    description="Tem certeza que deseja cancelar o Agendamento?"
-                    okText="Sim"
-                    cancelText="Não"
-                    disabled={isPending}
-                    onConfirm={() =>
-                      handleChangeStatus(APPOINTMENT_STATUS.CANCELED)
-                    }
-                  >
-                    <Button>Cancelar</Button>
-                  </Popconfirm>
+                  <Can permission={PERMISSIONS.APPOINTMENT_CANCEL}>
+                    <Popconfirm
+                      title="Cancelar"
+                      description="Tem certeza que deseja cancelar o Agendamento?"
+                      okText="Sim"
+                      cancelText="Não"
+                      disabled={isPending}
+                      onConfirm={() =>
+                        handleChangeStatus(APPOINTMENT_STATUS.CANCELED)
+                      }
+                    >
+                      <Button>Cancelar</Button>
+                    </Popconfirm>
+                  </Can>
                 )}
                 {canChangeAppointmentStatus(
                   appointment.status,
                   'reschedule',
                 ) && (
-                  <Button
-                    type="primary"
-                    onClick={() => setIsRescheduling(true)}
-                  >
-                    Reagendar
-                  </Button>
+                  <Can permission={PERMISSIONS.APPOINTMENT_RESCHEDULE}>
+                    <Button
+                      type="primary"
+                      onClick={() => setIsRescheduling(true)}
+                    >
+                      Reagendar
+                    </Button>
+                  </Can>
                 )}
               </div>
             )}

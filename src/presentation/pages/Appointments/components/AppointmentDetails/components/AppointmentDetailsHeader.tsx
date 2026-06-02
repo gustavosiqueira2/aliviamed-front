@@ -1,6 +1,10 @@
 import { Button, Tooltip, Typography } from 'antd';
 import { Pencil, X } from 'lucide-react';
 
+import { PERMISSIONS } from '@constants/PERMISSIONS';
+
+import Can from '@components/Can/Can';
+
 const { Title } = Typography;
 
 type TAppointmentDetailsHeaderProps = {
@@ -22,11 +26,13 @@ const AppointmentDetailsHeader: React.FC<TAppointmentDetailsHeaderProps> = (
 
       <div className="-mt-2 -mr-4">
         {!isRescheduling && (
-          <Tooltip placement="bottom" title="Reagendar">
-            <Button type="text" shape="circle" onClick={onReschedule}>
-              <Pencil size={16} className="text-blue-400!" />
-            </Button>
-          </Tooltip>
+          <Can permission={PERMISSIONS.APPOINTMENT_RESCHEDULE}>
+            <Tooltip placement="bottom" title="Reagendar">
+              <Button type="text" shape="circle" onClick={onReschedule}>
+                <Pencil size={16} className="text-blue-400!" />
+              </Button>
+            </Tooltip>
+          </Can>
         )}
 
         <Tooltip placement="bottom" title="Fechar">

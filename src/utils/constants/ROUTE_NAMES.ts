@@ -6,6 +6,10 @@ export const ROUTE_NAMES = {
   SIGN_IN: '/sign-in',
   SIGN_UP: '/sign-up',
 
+  COMPLETE_REGISTRATION: '/complete-registration',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
+
   PATIENTS: '/patients',
   NEW_PATIENT: '/new-patient',
 

@@ -2,4 +2,5 @@ export const USER_ROLES = {
   ADMIN: 'ADMIN',
   RECEPTION: 'RECEPTION',
   PROFESSIONAL: 'PROFESSIONAL',
+  CUSTOM: 'CUSTOM',
 } as const;

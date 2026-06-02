@@ -85,6 +85,89 @@ const authUser = async ({
   return { ...data, clinicProfile: data.userClinics[0] };
 };
 
+type TCompleteRegistrationPayload = { token: string; password: string };
+
+const completeRegistration = async ({
+  token,
+  password,
+}: TCompleteRegistrationPayload): Promise<IAuthStore> => {
+  const { data } = await api.post<TApiResponse>('/auth/complete-registration', {
+    token,
+    password,
+  });
+
+  window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, data.accessToken);
+
+  if (data.userClinics.length <= 1) {
+    window.localStorage.setItem(
+      LOCAL_STORAGE_CLINIC_ID,
+      data.userClinics[0].clinic.id,
+    );
+  }
+
+  return { ...data, clinicProfile: data.userClinics[0] };
+};
+
+export const useCompleteRegistration = () =>
+  useMutation({
+    mutationFn: completeRegistration,
+    onSuccess: (data) => {
+      queryClient.setQueriesData(
+        {
+          queryKey: ['AUTH'],
+        },
+        data,
+      );
+    },
+  });
+
+type TRegisterPayload = {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  birthdate?: Date;
+};
+
+export const useRegister = () => useMutation({ mutationFn: registerUser });
+
+const registerUser = async (payload: TRegisterPayload): Promise<void> => {
+  await api.post('/auth/register', payload);
+};
+
+type TForgotPasswordPayload = { email: string };
+
+const forgotPassword = async ({
+  email,
+}: TForgotPasswordPayload): Promise<{ message: string }> => {
+  const { data } = await api.post<{ message: string }>(
+    '/auth/forgot-password',
+    { email },
+  );
+
+  return data;
+};
+
+export const useForgotPassword = () =>
+  useMutation({ mutationFn: forgotPassword });
+
+type TResetPasswordPayload = { token: string; password: string };
+
+const resetPassword = async ({
+  token,
+  password,
+}: TResetPasswordPayload): Promise<{ message: string }> => {
+  const { data } = await api.post<{ message: string }>('/auth/reset-password', {
+    token,
+    password,
+  });
+
+  return data;
+};
+
+export const useResetPassword = () =>
+  useMutation({ mutationFn: resetPassword });
+
 export const logout = () => {
   queryClient.setQueriesData(
     {

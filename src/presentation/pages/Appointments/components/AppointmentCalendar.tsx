@@ -10,7 +10,12 @@ import {
   type TGetAppointmentResponse,
 } from '@store/Appointment';
 
+import { PERMISSIONS } from '@constants/PERMISSIONS';
+
+import { usePermissions } from '@hooks/usePermissions';
+
 import Calendar, { type TCalendarModes } from '@components/Calendar/Calendar';
+import Can from '@components/Can/Can';
 
 import AppointmentDetails from './AppointmentDetails/AppointmentDetails';
 
@@ -25,6 +30,9 @@ type TAppointmentCalendarProps = {
 const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
   onCreateAppointment,
 }) => {
+  const { hasPermission } = usePermissions();
+  const canCreateAppointment = hasPermission(PERMISSIONS.APPOINTMENT_CREATE);
+
   const [mode, setMode] = useState<TCalendarModes>('week');
 
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
@@ -59,9 +67,11 @@ const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
 
   const handleCellClick = useCallback(
     (date: Dayjs) => {
+      if (!canCreateAppointment) return;
+
       onCreateAppointment(date);
     },
-    [onCreateAppointment],
+    [onCreateAppointment, canCreateAppointment],
   );
 
   const handleBackToWeekMode = useCallback(() => {
@@ -97,9 +107,11 @@ const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
 
           <div className="h-8 w-px bg-gray-200" />
 
-          <Button type="primary" onClick={() => onCreateAppointment()}>
-            Novo agendamento
-          </Button>
+          <Can permission={PERMISSIONS.APPOINTMENT_CREATE}>
+            <Button type="primary" onClick={() => onCreateAppointment()}>
+              Novo agendamento
+            </Button>
+          </Can>
         </div>
 
         <Segmented

@@ -8,17 +8,22 @@ import { getApiError } from '@functions/getApiError';
 import { useNotificationContext } from '@contexts/NotificationContext';
 
 import type { USER_ROLES } from '@constants/USER_ROLES';
+import { ROLE_COLORS } from '@constants/ROLE_COLORS';
+import { PERMISSIONS } from '@constants/PERMISSIONS';
 
 import {
   useAddCollaborator,
+  useChangeUserPermissions,
   useChangeUserRole,
   useChangeUserStatus,
   useClinic,
+  usePermissionCatalog,
   type TClinicUser,
 } from '@store/ClinicStore';
 import { useAuth } from '@store/AuthStore';
 
 import FadeWrapper from '@components/FadeWrapper';
+import Can from '@components/Can/Can';
 
 import type { TManualAdditionSchemaForm } from './components/ManualAdditionSchema';
 import AddCollaboratorModal from './components/AddCollaboratorModal';
@@ -31,6 +36,7 @@ const Clinic = () => {
 
   const { data: auth } = useAuth();
   const { data: clinic } = useClinic();
+  const { data: permissionCatalog } = usePermissionCatalog();
 
   const [showAddCollaboratorModal, setShowAddCollaboratorModal] =
     useState(false);
@@ -42,6 +48,10 @@ const Clinic = () => {
     useChangeUserStatus();
   const { mutateAsync: changeUserRole, isPending: isPendingChangeRole } =
     useChangeUserRole();
+  const {
+    mutateAsync: changeUserPermissions,
+    isPending: isPendingChangePermissions,
+  } = useChangeUserPermissions();
 
   if (!clinic) return;
 
@@ -93,6 +103,35 @@ const Clinic = () => {
     }
   };
 
+  const handleChangeUserPermissions = async (permissions: string[]) => {
+    if (!editingUser) return;
+
+    try {
+      await changeUserPermissions({
+        id: editingUser.userId,
+        permissions,
+      });
+
+      notify({
+        type: 'success',
+        title: 'Sucesso',
+        description: (
+          <span>
+            As permissões de <b className="font-semibold">{editingUser.name}</b>{' '}
+            foram atualizadas!
+          </span>
+        ),
+      });
+      setEditingUser(null);
+    } catch (err) {
+      notify({
+        type: 'error',
+        title: 'Houve um problema',
+        description: getApiError(err),
+      });
+    }
+  };
+
   const handleChangeUserStatus = async (userId: string, status: boolean) => {
     try {
       await changeUserStatus({
@@ -130,11 +169,13 @@ const Clinic = () => {
       />
 
       <EditRoleModal
-        pending={isPendingChangeRole}
+        pending={isPendingChangeRole || isPendingChangePermissions}
         open={!!editingUser}
         user={editingUser}
+        catalog={permissionCatalog}
         onClose={() => setEditingUser(null)}
-        onSubmit={handleChangeUserRole}
+        onSubmitRole={handleChangeUserRole}
+        onSubmitPermissions={handleChangeUserPermissions}
       />
 
       <div className="mb-3 flex items-center justify-between">
@@ -142,12 +183,14 @@ const Clinic = () => {
           Clinica - {clinic.name}
         </Title>
 
-        <Button
-          type="primary"
-          onClick={() => setShowAddCollaboratorModal(true)}
-        >
-          Adicionar colaborador
-        </Button>
+        <Can permission={PERMISSIONS.CLINIC_USER_MANAGE}>
+          <Button
+            type="primary"
+            onClick={() => setShowAddCollaboratorModal(true)}
+          >
+            Adicionar colaborador
+          </Button>
+        </Can>
       </div>
 
       <Card classNames={{ body: 'p-0!' }}>
@@ -170,16 +213,7 @@ const Clinic = () => {
             {
               title: 'Permissão',
               render: ({ role }: TClinicUser) => (
-                <Tag
-                  variant="outlined"
-                  color={
-                    role === 'ADMIN'
-                      ? 'red'
-                      : role === 'PROFESSIONAL'
-                        ? 'blue'
-                        : 'cyan'
-                  }
-                >
+                <Tag variant="outlined" color={ROLE_COLORS[role]}>
                   {translateRole(role)}
                 </Tag>
               ),
@@ -187,22 +221,24 @@ const Clinic = () => {
             {
               render: (v) => (
                 <div className="flex justify-end gap-2">
-                  {v.userId !== auth?.user.id && (
-                    <Button
-                      disabled={isPendingChangeStatus}
-                      className="w-26"
-                      onClick={() =>
-                        handleChangeUserStatus(v.userId, !v.active)
-                      }
-                    >
-                      {v.active ? 'Desativar' : 'Ativar'}
-                    </Button>
-                  )}
-                  {v.userId !== auth?.user.id && (
-                    <Button type="primary" onClick={() => setEditingUser(v)}>
-                      Editar permissão
-                    </Button>
-                  )}
+                  <Can permission={PERMISSIONS.CLINIC_USER_MANAGE}>
+                    {v.userId !== auth?.user.id && (
+                      <Button
+                        disabled={isPendingChangeStatus}
+                        className="w-26"
+                        onClick={() =>
+                          handleChangeUserStatus(v.userId, !v.active)
+                        }
+                      >
+                        {v.active ? 'Desativar' : 'Ativar'}
+                      </Button>
+                    )}
+                    {v.userId !== auth?.user.id && (
+                      <Button type="primary" onClick={() => setEditingUser(v)}>
+                        Editar permissão
+                      </Button>
+                    )}
+                  </Can>
                 </div>
               ),
             },

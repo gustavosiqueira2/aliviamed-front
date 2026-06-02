@@ -9,6 +9,7 @@ export const useClinic = () =>
   useQuery({
     queryKey: ['CLINIC'],
     queryFn: getClinic,
+    staleTime: 1000 * 60 * 5,
   });
 
 export type TClinicUser = {
@@ -16,6 +17,7 @@ export type TClinicUser = {
   name: string;
   email: string;
   role: keyof typeof USER_ROLES;
+  permissions: string[];
   active: boolean;
 };
 
@@ -86,6 +88,48 @@ export const useChangeUserRole = () =>
 
 const changeUserRole = async ({ id, role }: TChangeUserRolePayload) => {
   const { data } = await api.patch('/clinic/users/role', { id, role });
+
+  return data;
+};
+
+type TChangeUserPermissionsPayload = {
+  id: string;
+  permissions: string[];
+};
+
+export const useChangeUserPermissions = () =>
+  useMutation({
+    mutationFn: changeUserPermissions,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['CLINIC'] });
+    },
+  });
+
+const changeUserPermissions = async ({
+  id,
+  permissions,
+}: TChangeUserPermissionsPayload) => {
+  const { data } = await api.patch('/clinic/users/permissions', {
+    id,
+    permissions,
+  });
+
+  return data;
+};
+
+export type TPermissionCatalog = {
+  permissions: { key: string; label: string }[];
+  presets: Partial<Record<keyof typeof USER_ROLES, string[]>>;
+};
+
+export const usePermissionCatalog = () =>
+  useQuery({
+    queryKey: ['CLINIC-PERMISSIONS'],
+    queryFn: getPermissionCatalog,
+  });
+
+const getPermissionCatalog = async () => {
+  const { data } = await api.get<TPermissionCatalog>('/clinic/permissions');
 
   return data;
 };

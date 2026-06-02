@@ -1,8 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
+import { PERMISSIONS } from '@constants/PERMISSIONS';
 
 import BaseLayout from '@components/Layout/BaseLayout';
+
+import ProtectedRoute from './ProtectedRoute';
 
 import Home from '@pages/Home/Home';
 
@@ -32,26 +35,63 @@ const AppRoutes = () => (
     <Routes>
       <Route path="/" element={<Home />} />
 
-      <Route path={ROUTE_NAMES.PATIENTS} element={<Patients />} />
+      <Route
+        path={ROUTE_NAMES.PATIENTS}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.PATIENT_VIEW}>
+            <Patients />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path={`${ROUTE_NAMES.PATIENTS}/:patientId`}
-        element={<PatientDetail />}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.PATIENT_VIEW}>
+            <PatientDetail />
+          </ProtectedRoute>
+        }
       />
       <Route
         path={`${ROUTE_NAMES.PATIENTS}/update/:patientId`}
-        element={<UpdatePatient />}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.PATIENT_UPDATE}>
+            <UpdatePatient />
+          </ProtectedRoute>
+        }
       />
-      <Route path={ROUTE_NAMES.NEW_PATIENT} element={<NewPatient />} />
+      <Route
+        path={ROUTE_NAMES.NEW_PATIENT}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.PATIENT_CREATE}>
+            <NewPatient />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path={ROUTE_NAMES.APPOINTMENTS} element={<Appointments />} />
+      <Route
+        path={ROUTE_NAMES.APPOINTMENTS}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.APPOINTMENT_VIEW}>
+            <Appointments />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path={`${ROUTE_NAMES.CONSULT}/start/:appointmentId`}
-        element={<StartConsult />}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.CONSULT_START}>
+            <StartConsult />
+          </ProtectedRoute>
+        }
       />
       <Route
         path={`${ROUTE_NAMES.CONSULT}/:appointmentId`}
-        element={<Consult />}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.CONSULT_VIEW}>
+            <Consult />
+          </ProtectedRoute>
+        }
       />
 
       <Route path={ROUTE_NAMES.FORMS} element={<Forms />} />

@@ -1,10 +1,16 @@
 import { useEffect } from 'react';
 
+import { Route, Routes } from 'react-router';
+
 import { Spin } from 'antd';
+
+import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
 import { useAuth } from '@store/AuthStore';
+
+import CompleteRegistration from '@pages/Auth/CompleteRegistration/CompleteRegistration';
 
 import LoginRoutes from './Login.routes';
 import AppRoutes from './App.routes';
@@ -32,11 +38,19 @@ const MainRoutes = () => {
       </div>
     );
 
-  if (!data?.accessToken) {
-    return <LoginRoutes />;
-  }
+  return (
+    <Routes>
+      <Route
+        path={ROUTE_NAMES.COMPLETE_REGISTRATION}
+        element={<CompleteRegistration />}
+      />
 
-  return <AppRoutes />;
+      <Route
+        path="*"
+        element={data?.accessToken ? <AppRoutes /> : <LoginRoutes />}
+      />
+    </Routes>
+  );
 };
 
 export default MainRoutes;
