@@ -2,7 +2,7 @@ import { Typography } from 'antd';
 
 import type { TAppointment } from '@store/Appointment';
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 type TAppointmentDetailsInfoProps = {
   appointment: TAppointment;
@@ -24,6 +24,13 @@ const AppointmentDetailsInfo: React.FC<TAppointmentDetailsInfoProps> = (
           Paciente:{' '}
         </Title>
         <Paragraph>{appointment.patient.name}</Paragraph>
+
+        {appointment.cancelReason && (
+          <>
+            <Title level={5}>Motivo do cancelamento:</Title>
+            <Text>{appointment.cancelReason}</Text>
+          </>
+        )}
       </div>
 
       <span className="text-[10px] text-gray-500">ID: {appointment.id}</span>
