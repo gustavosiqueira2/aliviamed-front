@@ -49,6 +49,10 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isDark = mode === 'dark' || (mode === 'system' && systemDark);
 
+  useEffect(() => {
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+  }, [isDark]);
+
   const value = useMemo(() => ({ mode, isDark, setMode }), [mode, isDark]);
 
   return (

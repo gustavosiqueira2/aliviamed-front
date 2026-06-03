@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion';
 import { type ROUTE_NAME } from '@constants/ROUTE_NAMES';
 
 import { useWidthBreakpoint } from '@hooks/useWidthBreakpoint';
+import { useTheme } from '@contexts/ThemeContext';
 
 import SideBarOption from './SideBarOption';
 
@@ -24,9 +25,15 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
 
   const isGreaterThan = useWidthBreakpoint(1200);
 
+  const { isDark } = useTheme();
+
   const {
     token: { colorBgLayout },
   } = theme.useToken();
+
+  const menuItemTextClass = isDark
+    ? '[&_.ant-menu-item:not(.ant-menu-item-selected)]:text-gray-200!'
+    : '[&_.ant-menu-item:not(.ant-menu-item-selected)]:text-gray-700!';
 
   const [collapsed, setCollapsed] = useState(false);
   const [selectedRoute, setSelectedRoute] = useState<ROUTE_NAME>(
@@ -81,7 +88,7 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
             theme="dark"
             mode="inline"
             selectedKeys={[selectedRoute]}
-            className="flex-1 *:px-2.5! [&_.ant-menu-item:not(.ant-menu-item-selected)]:text-gray-700!"
+            className={`flex-1 *:px-2.5! ${menuItemTextClass}`}
             style={{ backgroundColor: colorBgLayout }}
             items={SideBarOption(handleNavigate, selectedRoute).start}
           />
@@ -90,7 +97,7 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
             theme="dark"
             mode="inline"
             selectedKeys={[selectedRoute]}
-            className="*:px-2.5! [&_.ant-menu-item:not(.ant-menu-item-selected)]:text-gray-700!"
+            className={`*:px-2.5! ${menuItemTextClass}`}
             style={{ backgroundColor: colorBgLayout }}
             items={SideBarOption(handleNavigate, selectedRoute).end}
           />

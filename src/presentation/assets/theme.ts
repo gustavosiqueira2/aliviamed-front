@@ -53,8 +53,18 @@ export const darkTheme: ThemeConfig = {
       itemSelectedColor: '#fff',
     },
     Menu: {
-      darkDangerItemColor: 'red',
-      darkItemColor: 'red',
+      darkItemColor: '#e5e7eb',
+      darkItemHoverColor: '#ffffff',
+      darkItemSelectedColor: '#ffffff',
+    },
+    Notification: {
+      colorBgElevated: '#1f1f1f',
+      colorText: '#e5e7eb',
+      colorTextHeading: '#f9fafb',
+      colorIcon: '#9ca3af',
+      colorIconHover: '#e5e7eb',
+      boxShadow:
+        '0 6px 16px 0 rgba(0,0,0,0.45), 0 3px 6px -4px rgba(0,0,0,0.6), 0 9px 28px 8px rgba(0,0,0,0.3)',
     },
   },
 };

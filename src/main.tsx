@@ -30,15 +30,15 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
 
-      <NotificationProvider>
+      <ThemeProvider>
         <AuthProvider>
-          <ThemeProvider>
+          <NotificationProvider>
             <BrowserRouter>
               <MainRoutes />
             </BrowserRouter>
-          </ThemeProvider>
+          </NotificationProvider>
         </AuthProvider>
-      </NotificationProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,
 );
