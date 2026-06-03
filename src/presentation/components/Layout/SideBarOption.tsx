@@ -9,8 +9,12 @@ import {
   Workflow,
 } from 'lucide-react';
 
+import { type MenuProps } from 'antd';
+
 import { ROUTE_NAMES, type ROUTE_NAME } from '@constants/ROUTE_NAMES';
 import { PERMISSIONS, type TPermission } from '@constants/PERMISSIONS';
+
+type TMenuItem = NonNullable<MenuProps['items']>[number];
 
 import { useAuth } from '@store/AuthStore';
 
@@ -31,7 +35,7 @@ const SideBarOption = (
     return { color: defaultColor };
   };
 
-  const start: { permission?: TPermission; item: Record<string, unknown> }[] = [
+  const start: { permission?: TPermission; item: TMenuItem }[] = [
     {
       item: {
         key: '/',
@@ -132,7 +136,7 @@ const SideBarOption = (
         icon: <Settings size={18} color="#52525b" />,
         onClick: () => handleNavigate(ROUTE_NAMES.SETTINGS),
       },
-    ],
+    ] as TMenuItem[],
   };
 };
 
