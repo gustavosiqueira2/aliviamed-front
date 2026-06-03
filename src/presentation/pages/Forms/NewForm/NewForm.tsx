@@ -2,27 +2,22 @@ import { useState } from 'react';
 
 import {
   Alert,
-  Avatar,
   Breadcrumb,
   Button,
   Card,
-  Checkbox,
   Divider,
   theme,
   Typography,
 } from 'antd';
-import {
-  GripVertical,
-  Lightbulb,
-  MessageSquareText,
-  Phone,
-  Plus,
-  UserRound,
-  type LucideIcon,
-} from 'lucide-react';
+import { ArrowUpDown, Eye, Settings, type LucideIcon } from 'lucide-react';
 
-import SortableInputGroup from './SortableInputGroup';
-import InputGroupCard from './InputGroupCard';
+import { DragDropProvider, type DragEndEvent } from '@dnd-kit/react';
+
+import { DEFAULT_FORM_INPUT_GROUP } from '@constants/DEFAULT_FORM_INPUT_GROUP';
+
+import SortableInputGroup from './components/SortableInputGroup';
+import InputGroupCard from './components/InputGroupCard';
+import EditGroupCard from './components/EditGroupCard';
 
 const { Text } = Typography;
 
@@ -31,7 +26,8 @@ export type TInput = {
   name: string;
   label: string;
 };
-type TInputGroup = {
+
+export type TInputGroup = {
   id: string;
   show: boolean;
   title: string;
@@ -43,73 +39,27 @@ type TInputGroup = {
 
 const { Title, Paragraph } = Typography;
 
-const defaultInputGroups: TInputGroup[] = [
-  {
-    id: '0',
-    show: false,
-    title: 'Dados básicos',
-    description: 'Nome, Idade.',
-    Icon: UserRound,
-    iconColor: 'blue',
-    inputs: [
-      {
-        type: 'text',
-        name: 'name',
-        label: 'Nome',
-      },
-      {
-        type: 'number',
-        name: 'age',
-        label: 'Idade',
-      },
-    ],
-  },
-  {
-    id: '1',
-    show: false,
-    title: 'Contato e Endereço',
-    description: 'Numero de contato (whatsapp), Emails.',
-    Icon: Phone,
-    iconColor: 'purple',
-    inputs: [
-      {
-        type: 'phone',
-        name: 'phone',
-        label: 'Telefone (Whatsapp)',
-      },
-      {
-        type: 'email',
-        name: 'email',
-        label: 'Email',
-      },
-    ],
-  },
-  {
-    id: '2',
-    show: false,
-    title: 'Resumo',
-    description: 'Resumo',
-    Icon: MessageSquareText,
-    iconColor: 'orange',
-    inputs: [
-      {
-        type: 'text',
-        name: 'resume',
-        label: 'Resumo',
-      },
-    ],
-  },
-];
+const arrayMove = <T,>(array: T[], from: number, to: number): T[] => {
+  const next = array.slice();
+  next.splice(to, 0, next.splice(from, 1)[0]);
+  return next;
+};
 
 const NewForm = () => {
   const {
-    token: { colorPrimary },
+    token: { colorPrimary, blue6 },
   } = theme.useToken();
 
   const [inputGroups, setInputGroups] = useState<TInputGroup[]>([]);
 
+  const [groupToEditId, setGroupToEditId] = useState<string>();
+
+  const groupToEdit = inputGroups.find((group) => group.id === groupToEditId);
+
   const handleAddGroup = (id: string) => {
-    const groupToAdd = defaultInputGroups.find((group) => group.id === id);
+    const groupToAdd = DEFAULT_FORM_INPUT_GROUP.find(
+      (group) => group.id === id,
+    );
 
     if (groupToAdd) {
       setInputGroups((old) => [...old, groupToAdd]);
@@ -117,14 +67,73 @@ const NewForm = () => {
   };
 
   const handleRemoveGroup = (id: string) => {
+    if (id === groupToEditId) {
+      setGroupToEditId(undefined);
+    }
+
     setInputGroups((old) => old.filter((group) => group.id !== id));
+  };
+
+  const handleChangeGroupTitle = (id: string, title: string) => {
+    setInputGroups((old) =>
+      old.map((group) => (group.id === id ? { ...group, title } : group)),
+    );
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { source, target } = event.operation;
+
+    if (event.canceled || !source || !target || source.id === target.id) {
+      return;
+    }
+
+    const sourceId = String(source.id);
+    const targetId = String(target.id);
+
+    // Reordenar inputs dentro de um grupo (ids no formato `${groupId}::${name}`)
+    if (sourceId.includes('::') && targetId.includes('::')) {
+      const [sourceGroupId] = sourceId.split('::');
+      const [targetGroupId] = targetId.split('::');
+
+      if (sourceGroupId !== targetGroupId) return;
+
+      setInputGroups((groups) =>
+        groups.map((group) => {
+          if (group.id !== sourceGroupId) return group;
+
+          const from = group.inputs.findIndex(
+            (input) => `${group.id}::${input.name}` === sourceId,
+          );
+          const to = group.inputs.findIndex(
+            (input) => `${group.id}::${input.name}` === targetId,
+          );
+
+          if (from < 0 || to < 0) return group;
+
+          return { ...group, inputs: arrayMove(group.inputs, from, to) };
+        }),
+      );
+
+      return;
+    }
+
+    // Reordenar grupos
+    setInputGroups((groups) => {
+      const from = groups.findIndex((group) => group.id === sourceId);
+      const to = groups.findIndex((group) => group.id === targetId);
+
+      if (from < 0 || to < 0) return groups;
+
+      return arrayMove(groups, from, to);
+    });
   };
 
   return (
     <>
       <Breadcrumb items={[{ title: 'Formulários' }, { title: 'Novo' }]} />
 
-      <div className="flex flex-col gap-4">
+      <DragDropProvider onDragEnd={handleDragEnd}>
+        <div className="flex flex-col gap-4">
         <Card
           variant="borderless"
           className="mt-2! overflow-hidden"
@@ -140,15 +149,19 @@ const NewForm = () => {
               </Paragraph>
             </div>
 
-            <Button type="primary">Salvar formulário</Button>
+            <div className="flex items-center gap-2">
+              <Button icon={<Eye size={14} />}>Preview</Button>
+              <Button type="primary">Salvar formulário</Button>
+            </div>
           </div>
 
           <Divider className="my-0!" />
 
           <div className="flex flex-col p-4">
-            <Title level={5}>1. Adicionar grupo de perguntas</Title>
+            <Title level={5}>1. Adicionar grupos de perguntas</Title>
+
             <div className="flex gap-4">
-              {defaultInputGroups.map((group) => (
+              {DEFAULT_FORM_INPUT_GROUP.map((group) => (
                 <InputGroupCard
                   Icon={
                     <group.Icon className={`text-${group.iconColor}-500!`} />
@@ -171,20 +184,25 @@ const NewForm = () => {
         <div className="flex gap-4">
           <Card
             variant="borderless"
-            className="flex-1"
-            classNames={{ body: 'p-0!' }}
+            className="flex h-min! flex-1"
+            classNames={{ body: 'p-0! flex-1 flex flex-col' }}
           >
-            <div className="flex flex-col p-4 pb-0">
-              <Title level={5}>2. Formulário</Title>
+            <div className="flex flex-1 flex-col p-4 pb-0">
+              <Title level={5}>2. Ordenar formulário</Title>
+
               <div className="flex flex-col gap-4">
-                {inputGroups.map(({ id, title, inputs }, groupIndex) => (
+                {inputGroups.map((group, groupIndex) => (
                   <SortableInputGroup
-                    key={`input-group-${groupIndex}`}
-                    id={id}
-                    title={title}
+                    key={group.id}
                     groupIndex={groupIndex}
-                    inputs={inputs}
-                    onRemove={() => handleRemoveGroup(id)}
+                    id={group.id}
+                    title={group.title}
+                    inputs={group.inputs}
+                    onChangeTitle={(title) =>
+                      handleChangeGroupTitle(group.id, title)
+                    }
+                    onEdit={() => setGroupToEditId(group.id)}
+                    onRemove={() => handleRemoveGroup(group.id)}
                   />
                 ))}
               </div>
@@ -192,89 +210,44 @@ const NewForm = () => {
 
             <Divider className="my-4!" />
 
-            <Alert
-              showIcon
-              icon={<Lightbulb size={18} color={colorPrimary} />}
-              title={
-                <Text style={{ color: colorPrimary }}>
-                  <b className="font-semibold">Dica:</b> Você pode
-                  <b> arrastar</b> os grupos no preview para <b>reordenar</b>!
-                </Text>
-              }
-              style={{
-                borderColor: colorPrimary + '40',
-                background: colorPrimary + '10',
-              }}
-              className="m-4!"
-            />
-          </Card>
-
-          <Card className="h-full! min-w-[320px]" classNames={{ body: 'p-0!' }}>
-            <Title level={5} className="m-4!">
-              Configuração
-            </Title>
-
-            <Divider className="my-2!" />
-
-            <div className="p-4 py-2">
-              <div className="flex items-center gap-2">
-                <Avatar
-                  shape="circle"
-                  size={32}
-                  icon={<UserRound size={16} className="text-blue-500!" />}
-                  className="bg-blue-200!"
-                />
-
-                <Title level={5} className="mb-0!">
-                  Dados básicos
-                </Title>
-              </div>
-
-              <Paragraph className="mt-2 mb-0! font-semibold!">
-                Campos do grupo
-              </Paragraph>
-              <Text>Arraste para reordenar o grupo.</Text>
-            </div>
-
-            <Divider className="my-0!" />
-
-            <div className="flex flex-col gap-2 p-4">
-              <Card
-                size="small"
-                className="flex-1 cursor-grab"
-                classNames={{ body: 'flex items-center gap-2 p-2!' }}
-              >
-                <GripVertical size={16} color="#d1d5db" />
-
-                <div className="flex flex-col">
-                  <Title level={5} className="mb-0! text-sm!">
-                    Nome
-                  </Title>
-                  <Checkbox>Obrigatório</Checkbox>
-                </div>
-              </Card>
-              <Card
-                size="small"
-                className="flex-1 cursor-grab"
-                classNames={{ body: 'flex items-center gap-2 p-2!' }}
-              >
-                <GripVertical size={16} color="#d1d5db" />
-
-                <div className="flex flex-col">
-                  <Title level={5} className="mb-0! text-sm!">
-                    Idade
-                  </Title>
-                  <Checkbox>Obrigatório</Checkbox>
-                </div>
-              </Card>
-
-              <Button className="mt-2" icon={<Plus size={16} />}>
-                Adicionar Campo
-              </Button>
+            <div className="m-4 mt-0 flex gap-2">
+              <Alert
+                className="flex-1"
+                showIcon
+                icon={<ArrowUpDown size={18} color={colorPrimary} />}
+                title={
+                  <Text style={{ color: colorPrimary }}>
+                    <b className="font-semibold">Dica:</b> Você pode
+                    <b> arrastar</b> os grupos para <b>reordenar</b>!
+                  </Text>
+                }
+                style={{
+                  borderColor: colorPrimary + '40',
+                  background: colorPrimary + '10',
+                }}
+              />
+              <Alert
+                className="flex-1"
+                showIcon
+                icon={<Settings size={18} color={blue6} />}
+                title={
+                  <Text style={{ color: blue6 }}>
+                    <b className="font-semibold">Dica:</b> Você pode
+                    <b> clicar na engrenagem</b> para <b>editar</b> o grupo!
+                  </Text>
+                }
+                style={{
+                  borderColor: blue6 + '40',
+                  background: blue6 + '10',
+                }}
+              />
             </div>
           </Card>
+
+          <EditGroupCard group={groupToEdit} />
         </div>
-      </div>
+        </div>
+      </DragDropProvider>
     </>
   );
 };
