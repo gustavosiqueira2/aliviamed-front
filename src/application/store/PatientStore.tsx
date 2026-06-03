@@ -20,6 +20,7 @@ interface IPatient {
   name: string;
   birthdate: Date;
   phone?: string;
+  emergencyPhone?: string;
   document?: string;
   sex?: PatientSex;
   email?: string;
@@ -32,6 +33,7 @@ interface IApiPatient {
   name: string;
   birthdate: string;
   phone?: string;
+  emergencyPhone?: string;
   document?: string;
   sex?: PatientSex;
   email?: string;
@@ -88,6 +90,7 @@ type TCreateUpdatePatientPayload = {
   name: string;
   birthdate: string;
   phone?: string | null;
+  emergencyPhone?: string | null;
   document?: string | null;
   sex?: string | null;
   email?: string | null;

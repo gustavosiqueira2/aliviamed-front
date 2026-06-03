@@ -39,6 +39,7 @@ const NewPatient = () => {
         name: data.name,
         birthdate: dayjs(data.birthdate).format('YYYY-MM-DD'),
         phone: data.phone || undefined,
+        emergencyPhone: data.emergencyPhone || undefined,
         document: data.document || undefined,
         sex: data.sex || undefined,
         email: data.email || undefined,
@@ -104,13 +105,6 @@ const NewPatient = () => {
           </Title>
           <Divider className="mt-0! mb-2!" />
           <div className="flex gap-4">
-            <PhoneInput
-              control={control}
-              name="phone"
-              label="Telefone"
-              optional
-              disabled={isPending}
-            />
             <TextInput
               control={control}
               name="document"
@@ -119,8 +113,6 @@ const NewPatient = () => {
               maxLength={14}
               disabled={isPending}
             />
-          </div>
-          <div className="mt-2 flex gap-4">
             <SelectInput
               control={control}
               name="sex"
@@ -134,6 +126,29 @@ const NewPatient = () => {
               ]}
               disabled={isPending}
             />
+          </div>
+
+          <Title level={4} className="mt-4! mb-1!">
+            Contato
+          </Title>
+          <Divider className="mt-0! mb-2!" />
+          <div className="flex gap-4">
+            <PhoneInput
+              control={control}
+              name="phone"
+              label="Telefone"
+              optional
+              disabled={isPending}
+            />
+            <PhoneInput
+              control={control}
+              name="emergencyPhone"
+              label="Telefone de emergência"
+              optional
+              disabled={isPending}
+            />
+          </div>
+          <div className="mt-2 flex gap-4">
             <TextInput
               control={control}
               name="email"

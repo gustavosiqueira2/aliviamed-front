@@ -88,6 +88,11 @@ const PatientDetail = () => {
             {patient.phone && (
               <Paragraph className="my-0!">Telefone: {patient.phone}</Paragraph>
             )}
+            {patient.emergencyPhone && (
+              <Paragraph className="my-0!">
+                Telefone de emergência: {patient.emergencyPhone}
+              </Paragraph>
+            )}
             {patient.email && (
               <Paragraph className="my-0!">E-mail: {patient.email}</Paragraph>
             )}

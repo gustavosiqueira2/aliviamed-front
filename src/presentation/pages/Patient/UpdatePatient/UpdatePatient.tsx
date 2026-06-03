@@ -48,6 +48,7 @@ const UpdatePatient = () => {
         name: patient.name,
         birthdate: patient.birthdate,
         phone: patient.phone ?? '',
+        emergencyPhone: patient.emergencyPhone ?? '',
         document: patient.document ?? '',
         sex: patient.sex || undefined,
         email: patient.email ?? '',
@@ -66,6 +67,7 @@ const UpdatePatient = () => {
         name: data.name,
         birthdate: dayjs(data.birthdate).format('YYYY-MM-DD'),
         phone: data.phone || null,
+        emergencyPhone: data.emergencyPhone || null,
         document: data.document || null,
         sex: data.sex || null,
         email: data.email || null,
@@ -134,13 +136,6 @@ const UpdatePatient = () => {
           </Title>
           <Divider className="mt-0! mb-2!" />
           <div className="flex gap-4">
-            <PhoneInput
-              control={control}
-              name="phone"
-              label="Telefone"
-              optional
-              disabled={isPending}
-            />
             <TextInput
               control={control}
               name="document"
@@ -149,8 +144,6 @@ const UpdatePatient = () => {
               maxLength={14}
               disabled={isPending || !!patient.document}
             />
-          </div>
-          <div className="mt-2 flex gap-4">
             <SelectInput
               control={control}
               name="sex"
@@ -164,6 +157,29 @@ const UpdatePatient = () => {
               ]}
               disabled={isPending}
             />
+          </div>
+
+          <Title level={4} className="mt-4! mb-1!">
+            Contato
+          </Title>
+          <Divider className="mt-0! mb-2!" />
+          <div className="flex gap-4">
+            <PhoneInput
+              control={control}
+              name="phone"
+              label="Telefone"
+              optional
+              disabled={isPending}
+            />
+            <PhoneInput
+              control={control}
+              name="emergencyPhone"
+              label="Telefone de emergência"
+              optional
+              disabled={isPending}
+            />
+          </div>
+          <div className="mt-2 flex gap-4">
             <TextInput
               control={control}
               name="email"
