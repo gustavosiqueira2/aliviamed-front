@@ -102,7 +102,7 @@ const Settings = () => {
   const [section, setSection] = useState<TSettingsSection>('info');
   const [confirmLogout, setConfirmLogout] = useState(false);
 
-  const role = data?.clinicProfile.role;
+  const role = data?.clinicProfile?.role;
 
   const handleLogout = () => {
     logout();
@@ -159,7 +159,7 @@ const Settings = () => {
                   {data?.user.name ?? '—'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Clínica">
-                  {data?.clinicProfile.clinic.name ?? '—'}
+                  {data?.clinicProfile?.clinic.name ?? '—'}
                 </Descriptions.Item>
                 <Descriptions.Item label="Papel">
                   {role ? (

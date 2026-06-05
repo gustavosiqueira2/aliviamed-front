@@ -113,7 +113,10 @@ const SideBarOption = (
         key: ROUTE_NAMES.CLINIC,
         label: 'Clinica',
         icon: (
-          <Hospital size={18} {...getIconColor('#e11d48', ROUTE_NAMES.CLINIC)} />
+          <Hospital
+            size={18}
+            {...getIconColor('#e11d48', ROUTE_NAMES.CLINIC)}
+          />
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.CLINIC),
       },
@@ -127,13 +130,18 @@ const SideBarOption = (
     end: [
       {
         key: 'selected-clinic',
-        label: data?.clinicProfile.clinic.name,
+        label: data?.clinicProfile?.clinic.name,
         icon: <Hospital size={18} color="#52525b" />,
       },
       {
         key: ROUTE_NAMES.SETTINGS,
         label: 'Configurações',
-        icon: <Settings size={18} color="#52525b" />,
+        icon: (
+          <Settings
+            size={18}
+            {...getIconColor('#52525b', ROUTE_NAMES.SETTINGS)}
+          />
+        ),
         onClick: () => handleNavigate(ROUTE_NAMES.SETTINGS),
       },
     ] as TMenuItem[],

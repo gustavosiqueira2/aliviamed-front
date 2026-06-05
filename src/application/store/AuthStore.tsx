@@ -34,7 +34,7 @@ interface IAuthStore {
   accessToken: string;
   user: TUser;
   userClinics: TClinicProfile[];
-  clinicProfile: TClinicProfile;
+  clinicProfile?: TClinicProfile;
 }
 
 export const useAuthUser = () =>
@@ -75,7 +75,7 @@ const authUser = async ({
 
   window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, data.accessToken);
 
-  if (data.userClinics.length <= 1) {
+  if (data.userClinics.length > 0) {
     window.localStorage.setItem(
       LOCAL_STORAGE_CLINIC_ID,
       data.userClinics[0].clinic.id,
@@ -98,7 +98,7 @@ const completeRegistration = async ({
 
   window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, data.accessToken);
 
-  if (data.userClinics.length <= 1) {
+  if (data.userClinics.length > 0) {
     window.localStorage.setItem(
       LOCAL_STORAGE_CLINIC_ID,
       data.userClinics[0].clinic.id,
@@ -168,6 +168,39 @@ const resetPassword = async ({
 export const useResetPassword = () =>
   useMutation({ mutationFn: resetPassword });
 
+type TCreateClinicPayload = {
+  name: string;
+  specialty: string;
+  addressZip: string;
+  addressStreet: string;
+  addressNumber: string;
+  addressComplement?: string;
+  addressDistrict: string;
+  addressCity: string;
+  addressState: string;
+};
+
+const createClinic = async (
+  payload: TCreateClinicPayload,
+): Promise<{ id: string; name: string }> => {
+  const { data } = await api.post<{ id: string; name: string }>(
+    '/clinics',
+    payload,
+  );
+
+  window.localStorage.setItem(LOCAL_STORAGE_CLINIC_ID, data.id);
+
+  return data;
+};
+
+export const useCreateClinic = () =>
+  useMutation({
+    mutationFn: createClinic,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['AUTH'] });
+    },
+  });
+
 export const logout = () => {
   queryClient.setQueriesData(
     {
@@ -206,10 +239,12 @@ export const useAuth = () =>
           clinicProfile: data.userClinics[0],
         };
 
-        window.localStorage.setItem(
-          LOCAL_STORAGE_CLINIC_ID,
-          data.userClinics[0].clinic.id,
-        );
+        if (data.userClinics.length > 0) {
+          window.localStorage.setItem(
+            LOCAL_STORAGE_CLINIC_ID,
+            data.userClinics[0].clinic.id,
+          );
+        }
 
         return payload;
       }

@@ -1,8 +1,4 @@
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-} from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 import dayjs from 'dayjs';
 
@@ -10,6 +6,7 @@ import type { ApiMeta } from '@interfaces/ApiMeta.interface';
 
 import api from '../../services/api';
 import type { TGetConsultApiReturn } from './Consult';
+import { queryClient } from './QueryClient';
 
 export type PatientSex = 'MALE' | 'FEMALE' | 'OTHER';
 
@@ -119,6 +116,12 @@ const searchPatients = async (name: string) => {
 export const useCreatePatient = () =>
   useMutation({
     mutationFn: createPatient,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['PATIENTS'],
+        exact: false,
+      });
+    },
   });
 
 const createPatient = async (

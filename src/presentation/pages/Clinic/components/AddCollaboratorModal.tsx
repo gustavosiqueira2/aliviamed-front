@@ -85,12 +85,21 @@ const AddCollaboratorModal: React.FC<TAddCollaboratorModalProps> = (props) => {
             />
           </div>
 
+          <TextInput
+            disabled={pending}
+            label="Email"
+            control={control}
+            name="email"
+          />
+
           <div className="flex flex-col gap-2 md:flex-row">
             <TextInput
               disabled={pending}
-              label="Email"
+              optional
+              label="Especialidade"
               control={control}
-              name="email"
+              name="specialty"
+              placeholder="Ex.: Cardiologia"
             />
 
             <Button

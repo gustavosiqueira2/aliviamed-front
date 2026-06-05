@@ -36,6 +36,7 @@ type TAddCollaboratorPayload = {
   name: string;
   email: string;
   role: keyof typeof USER_ROLES;
+  specialty?: string;
 };
 
 export const useAddCollaborator = () =>

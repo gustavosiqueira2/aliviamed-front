@@ -23,6 +23,7 @@ export type TAppointment = {
   checkedAt: Date | null;
   canceledAt: Date | null;
   canceledByUserId: string | null;
+  cancelReason: string | null;
   patient: {
     id: string;
     name: string;

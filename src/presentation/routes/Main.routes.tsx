@@ -11,6 +11,9 @@ import { useNotificationContext } from '@contexts/NotificationContext';
 import { useAuth } from '@store/AuthStore';
 
 import CompleteRegistration from '@pages/Auth/CompleteRegistration/CompleteRegistration';
+import Onboarding from '@pages/Auth/Onboarding/Onboarding';
+import Help from '@pages/Auth/Help/Help';
+import Privacy from '@pages/Auth/Privacy/Privacy';
 
 import LoginRoutes from './Login.routes';
 import AppRoutes from './App.routes';
@@ -45,9 +48,20 @@ const MainRoutes = () => {
         element={<CompleteRegistration />}
       />
 
+      <Route path={ROUTE_NAMES.HELP} element={<Help />} />
+      <Route path={ROUTE_NAMES.PRIVACY} element={<Privacy />} />
+
       <Route
         path="*"
-        element={data?.accessToken ? <AppRoutes /> : <LoginRoutes />}
+        element={
+          !data?.accessToken ? (
+            <LoginRoutes />
+          ) : data.userClinics.length === 0 ? (
+            <Onboarding />
+          ) : (
+            <AppRoutes />
+          )
+        }
       />
     </Routes>
   );

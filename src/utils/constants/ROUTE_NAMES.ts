@@ -10,6 +10,9 @@ export const ROUTE_NAMES = {
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
 
+  HELP: '/help',
+  PRIVACY: '/privacy',
+
   PATIENTS: '/patients',
   NEW_PATIENT: '/new-patient',
 

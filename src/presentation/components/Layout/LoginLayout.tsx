@@ -18,7 +18,7 @@ const LoginLayout: React.FC<TLoginLayoutProps> = ({ children }) => {
         style={{
           backgroundColor: colorBgBase,
           backgroundImage: `
-radial-gradient(#8b5cf640 2px, transparent 2px), radial-gradient(#8b5cf620 2px, ${colorBgBase} 2px)
+radial-gradient(#8b5cf640 2px, transparent 2px), radial-gradient(#8b5cf620 4px, ${colorBgBase} 4px)
             `,
           backgroundSize: '80px 80px',
           backgroundPosition: '0 0,40px 40px',

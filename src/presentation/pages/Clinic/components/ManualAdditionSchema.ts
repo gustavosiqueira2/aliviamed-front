@@ -17,4 +17,5 @@ export const ManualAdditionSchemaSchema = z.object({
   role: z.enum(roles, {
     message: 'Role inválida',
   }),
+  specialty: z.string().trim().optional(),
 });
