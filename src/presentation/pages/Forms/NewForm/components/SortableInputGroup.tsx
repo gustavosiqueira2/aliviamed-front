@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { useSortable } from '@dnd-kit/react/sortable';
 
 import { GripVertical, Minus, Pencil, Settings } from 'lucide-react';
-import { Button, Card, Input, Tooltip } from 'antd';
+import { Button, Card, Input, Tooltip, Typography } from 'antd';
 
 import type { TInput } from '../NewForm';
+
+import { renderFormInput } from './renderFormInput';
+
+const { Text } = Typography;
 
 type TSortableInputGroupProps = {
   groupIndex: number;
@@ -103,9 +107,20 @@ const SortableInputGroup: React.FC<TSortableInputGroupProps> = (props) => {
         className="flex-1 cursor-grab select-none"
         classNames={{ body: 'gap-2 flex pointer-events-none' }}
       >
-        {inputs.map(({ label }) => (
-          <Input placeholder={label} />
-        ))}
+        {inputs.length === 0 ? (
+          <Text type="secondary" italic className="text-sm!">
+            Nenhum campo neste grupo
+          </Text>
+        ) : (
+          inputs.map((input) => (
+            <Fragment key={input.name}>
+              {renderFormInput(
+                input,
+                input.required ? `${input.label} *` : input.label,
+              )}
+            </Fragment>
+          ))
+        )}
       </Card>
     </div>
   );

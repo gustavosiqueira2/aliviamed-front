@@ -1,17 +1,23 @@
 import { Button, Card, Divider, Empty, Typography } from 'antd';
 import { Plus } from 'lucide-react';
 
-import type { TInputGroup } from '../NewForm';
+import type { TInput, TInputGroup } from '../NewForm';
 import SortableInput from './SortableInput';
 
 const { Title, Text, Paragraph } = Typography;
 
 type TEditGroupCardProps = {
   group?: TInputGroup;
+  onAddInput?: (groupId: string) => void;
+  onChangeInput?: (
+    groupId: string,
+    inputName: string,
+    patch: Partial<TInput>,
+  ) => void;
 };
 
 const EditGroupCard: React.FC<TEditGroupCardProps> = (props) => {
-  const { group } = props;
+  const { group, onAddInput, onChangeInput } = props;
 
   if (!group) {
     return (
@@ -55,11 +61,20 @@ const EditGroupCard: React.FC<TEditGroupCardProps> = (props) => {
             id={`${group.id}::${input.name}`}
             index={index}
             groupId={group.id}
+            name={input.name}
             label={input.label}
+            type={input.type}
+            required={input.required}
+            options={input.options}
+            onChange={(patch) => onChangeInput?.(group.id, input.name, patch)}
           />
         ))}
 
-        <Button className="mt-2" icon={<Plus size={16} />}>
+        <Button
+          className="mt-2"
+          icon={<Plus size={16} />}
+          onClick={() => onAddInput?.(group.id)}
+        >
           Adicionar Campo
         </Button>
       </div>

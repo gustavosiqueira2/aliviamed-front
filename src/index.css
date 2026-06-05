@@ -7,8 +7,7 @@ body,
   width: 100%;
 }
 
-/* Scrollbars acompanham o tema (color-scheme é definido pelo ThemeContext) */
-* {
+ * {
   scrollbar-color: light-dark(#c1c1c1, #4b4b4b) transparent;
 }
 
@@ -30,4 +29,12 @@ body,
 
 *::-webkit-scrollbar-thumb:hover {
   background-color: light-dark(#a8a8a8, #5e5e5e);
+}
+ 
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
