@@ -24,9 +24,11 @@ import { useNotificationContext } from '@contexts/NotificationContext';
 import {
   useChangeAppointmentStatus,
   useRescheduleAppointment,
-  type TAppointment,
-  type TChangeStatusOptions,
-} from '@store/Appointment';
+} from '@store/Appointment.store';
+import type {
+  TAppointment,
+  TAppointmentStatusChange,
+} from '@interfaces/Appointment.interface';
 
 import Can from '@components/Can/Can';
 import PopConfirmDefault from '@components/PopConfirmDefault';
@@ -84,7 +86,7 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
   }, [appointment, reset, setValue]);
 
   const handleChangeStatus = async (
-    status: TChangeStatusOptions,
+    status: TAppointmentStatusChange,
     cancelReason?: string,
   ) => {
     try {

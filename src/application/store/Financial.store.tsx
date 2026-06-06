@@ -2,45 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 
 import dayjs from 'dayjs';
 
+import type {
+  TCashFlowEntryReturn,
+  TCashFlowEntry,
+  TFinancialSummary,
+} from '@interfaces/Financial.interface';
+
 // import api from '../../services/api';
-
-export type TCashFlowType = 'INCOME' | 'EXPENSE';
-export type TCashFlowStatus = 'PAID' | 'PENDING';
-
-export type TCashFlowEntry = {
-  id: string;
-  date: Date;
-  description: string;
-  patientName: string | null;
-  type: TCashFlowType;
-  status: TCashFlowStatus;
-  amount: number;
-};
-
-export type TFinancialSummary = {
-  accountsReceivable: number;
-  overduePatients: number;
-  receivedThisMonth: number;
-  monthBalance: number;
-};
-
-// Formato esperado da futura API (datas como string ISO).
-interface IApiCashFlowEntry {
-  id: string;
-  date: string;
-  description: string;
-  patientName: string | null;
-  type: TCashFlowType;
-  status: TCashFlowStatus;
-  amount: number;
-}
 
 // ---------------------------------------------------------------------------
 // MOCK temporário: não existe módulo financeiro na API ainda.
 // Quando existir, basta remover este bloco e trocar pelas chamadas reais
 // indicadas com TODO em cada queryFn abaixo.
 // ---------------------------------------------------------------------------
-const buildMockCashFlow = (): IApiCashFlowEntry[] => {
+const buildMockCashFlow = (): TCashFlowEntryReturn[] => {
   const today = dayjs();
 
   return [
@@ -146,14 +121,14 @@ const buildMockCashFlow = (): IApiCashFlowEntry[] => {
   ];
 };
 
-const mapEntry = (entry: IApiCashFlowEntry): TCashFlowEntry => ({
+const mapEntry = (entry: TCashFlowEntryReturn): TCashFlowEntry => ({
   ...entry,
   date: dayjs(entry.date).toDate(),
 });
 
 const getCashFlow = async (): Promise<TCashFlowEntry[]> => {
   // TODO: quando o módulo financeiro existir na API, troque o mock por:
-  // const { data } = await api.get<IApiCashFlowEntry[]>('/financial/cash-flow');
+  // const { data } = await api.get<TCashFlowEntryReturn[]>('/financial/cash-flow');
   // return data.map(mapEntry);
   return buildMockCashFlow()
     .map(mapEntry)

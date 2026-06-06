@@ -16,7 +16,7 @@ import { PERMISSIONS, type TPermission } from '@constants/PERMISSIONS';
 
 type TMenuItem = NonNullable<MenuProps['items']>[number];
 
-import { useAuth } from '@store/AuthStore';
+import { useAuth } from '@store/Auth.store';
 
 import { usePermissions } from '@hooks/usePermissions';
 

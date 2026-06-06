@@ -2,9 +2,9 @@ import dayjs from 'dayjs';
 
 import { APPOINTMENT_STATUS } from '@constants/APPOINTMENT_STATUS';
 
-import { useAppointments } from '@store/Appointment';
-import { useActiveConsult } from '@store/Consult';
-import { useAuth } from '@store/AuthStore';
+import { useAppointments } from '@store/Appointment.store';
+import { useActiveConsult } from '@store/Consult.store';
+import { useAuth } from '@store/Auth.store';
 
 import FadeWrapper from '@components/FadeWrapper';
 

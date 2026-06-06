@@ -8,7 +8,7 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useForgotPassword } from '@store/AuthStore';
+import { useForgotPassword } from '@store/Auth.store';
 
 import TextInput from '@components/Form/TextInput';
 

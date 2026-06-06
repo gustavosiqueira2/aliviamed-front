@@ -4,7 +4,7 @@ import { Card, Empty, Typography } from 'antd';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
-import type { TAppointment } from '@store/Appointment';
+import type { TAppointment } from '@interfaces/Appointment.interface';
 
 import QueuePatient from './QueuePatient';
 

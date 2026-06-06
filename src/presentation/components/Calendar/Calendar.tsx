@@ -4,7 +4,7 @@ import { type Dayjs } from 'dayjs';
 
 import { Card } from 'antd';
 
-import type { TAppointment, TGetAppointmentResponse } from '@store/Appointment';
+import type { TAppointment, TAppointmentResponse } from '@interfaces/Appointment.interface';
 
 import CalendarHeader from './components/CalendarHeader';
 import MonthCalendar from './components/MonthCalendar';
@@ -17,7 +17,7 @@ export type TCalendarModes = 'week' | 'day';
 type TCalendarProps = {
   mode: TCalendarModes;
   dates: Dayjs[];
-  appointments: TGetAppointmentResponse[];
+  appointments: TAppointmentResponse[];
   selectedDate: Dayjs;
   onHeaderDateClick?: (date: Dayjs) => void;
   onCellClick?: (date: Dayjs) => void;

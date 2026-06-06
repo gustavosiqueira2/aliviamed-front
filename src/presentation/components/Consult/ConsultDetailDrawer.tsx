@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 import { Drawer, Typography } from 'antd';
 
-import type { TGetConsultApiReturn } from '@store/Consult';
+import type { TConsult } from '@interfaces/Consult.interface';
 
 const { Title, Text } = Typography;
 
@@ -18,7 +18,7 @@ const FIELDS: {
 ];
 
 type TConsultDetailDrawerProps = {
-  consult: TGetConsultApiReturn | null;
+  consult: TConsult | null;
   open: boolean;
   onClose: () => void;
 };

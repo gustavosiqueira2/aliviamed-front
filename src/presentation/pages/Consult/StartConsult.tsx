@@ -11,7 +11,7 @@ import { getApiError } from '@functions/getApiError';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useCreateConsult } from '@store/Consult';
+import { useCreateConsult } from '@store/Consult.store';
 
 import FadeWrapper from '@components/FadeWrapper';
 

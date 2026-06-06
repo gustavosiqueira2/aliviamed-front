@@ -9,7 +9,7 @@ import { formatTimerRange } from '@functions/formatTimerRange';
 
 import { useNow } from '@hooks/useNow';
 
-import type { TAppointment } from '@store/Appointment';
+import type { TAppointment } from '@interfaces/Appointment.interface';
 
 import Can from '@components/Can/Can';
 

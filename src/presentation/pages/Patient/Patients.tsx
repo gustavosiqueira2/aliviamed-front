@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { Button, Card, Input, Table, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
-import { usePatients } from '@store/PatientStore';
+import { usePatients } from '@store/Patient.store';
 
 import { useDebounce } from '@hooks/useDebounce';
 

@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 
-import type { TAppointment } from '@store/Appointment';
+import type { TAppointment } from '@interfaces/Appointment.interface';
 
 const { Title, Paragraph, Text } = Typography;
 

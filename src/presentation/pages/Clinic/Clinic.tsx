@@ -18,9 +18,9 @@ import {
   useChangeUserStatus,
   useClinic,
   usePermissionCatalog,
-  type TClinicUser,
-} from '@store/ClinicStore';
-import { useAuth } from '@store/AuthStore';
+} from '@store/Clinic.store';
+import type { TClinicUser } from '@interfaces/Clinic.interface';
+import { useAuth } from '@store/Auth.store';
 
 import FadeWrapper from '@components/FadeWrapper';
 import Can from '@components/Can/Can';

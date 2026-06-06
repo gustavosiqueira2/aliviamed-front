@@ -4,7 +4,7 @@ import { Card, Empty, Typography } from 'antd';
 
 import { EVENT_COLOR } from '@constants/EVENT_COLOR';
 
-import type { TAppointment } from '@store/Appointment';
+import type { TAppointment } from '@interfaces/Appointment.interface';
 
 import AppointmentPageFooter from '@pages/Appointments/components/AppointmentPageFooter';
 

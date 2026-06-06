@@ -2,15 +2,15 @@ import dayjs from 'dayjs';
 
 import { Empty, List, Skeleton, Typography } from 'antd';
 
-import { usePatientConsultHistory } from '@store/PatientStore';
-import { type TGetConsultApiReturn } from '@store/Consult';
+import { usePatientConsultHistory } from '@store/Patient.store';
+import { type TConsult } from '@interfaces/Consult.interface';
 
 const { Text } = Typography;
 
 type TPreviousConsultsListProps = {
   patientId?: string;
   currentConsultId?: string;
-  onSelect: (consult: TGetConsultApiReturn) => void;
+  onSelect: (consult: TConsult) => void;
 };
 
 const PreviousConsultsList: React.FC<TPreviousConsultsListProps> = (props) => {

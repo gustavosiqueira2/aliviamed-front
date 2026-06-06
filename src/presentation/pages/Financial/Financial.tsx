@@ -6,11 +6,8 @@ import { Banknote, HandCoins, UserRoundX, Wallet } from 'lucide-react';
 
 import { formatCurrency } from '@functions/formatCurrency';
 
-import {
-  useCashFlow,
-  useFinancialSummary,
-  type TCashFlowEntry,
-} from '@store/FinancialStore';
+import { useCashFlow, useFinancialSummary } from '@store/Financial.store';
+import type { TCashFlowEntry } from '@interfaces/Financial.interface';
 
 import FadeWrapper from '@components/FadeWrapper';
 

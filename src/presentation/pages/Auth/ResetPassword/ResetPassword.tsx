@@ -8,7 +8,7 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useResetPassword } from '@store/AuthStore';
+import { useResetPassword } from '@store/Auth.store';
 
 import TextInput from '@components/Form/TextInput';
 

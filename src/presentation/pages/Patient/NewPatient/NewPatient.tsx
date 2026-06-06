@@ -11,7 +11,7 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useCreatePatient } from '@store/PatientStore';
+import { useCreatePatient } from '@store/Patient.store';
 
 import TextInput from '@components/Form/TextInput';
 import DateInput from '@components/Form/DateInput';

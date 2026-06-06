@@ -9,7 +9,7 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useAuthUser, useRegister } from '@store/AuthStore';
+import { useAuthUser, useRegister } from '@store/Auth.store';
 
 import PhoneInput from '@components/Form/PhoneInput';
 import DateInput from '@components/Form/DateInput';

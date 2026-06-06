@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { CALENDAR_PROPERTIES } from '@constants/CALENDAR_PROPERTIES';
 
-import type { TAppointment, TGetAppointmentResponse } from '@store/Appointment';
+import type { TAppointment, TAppointmentResponse } from '@interfaces/Appointment.interface';
 
 import { leftSideWidth } from '../Calendar';
 
@@ -15,7 +15,7 @@ import TimeLine from './TimeLine';
 export const cardPadding = 4;
 
 type THourCalendarProps = {
-  appointments?: TGetAppointmentResponse[];
+  appointments?: TAppointmentResponse[];
   onSelectAppointment?: (appointment: TAppointment) => void;
   onCellClick?: (date: Dayjs) => void;
 };

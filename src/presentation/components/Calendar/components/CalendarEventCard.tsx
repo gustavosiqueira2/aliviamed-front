@@ -4,7 +4,7 @@ import { EVENT_COLOR } from '@constants/EVENT_COLOR';
 
 import { getCalendarCardTop } from '@functions/getCalendarCardTop';
 
-import type { TAppointment } from '@store/Appointment';
+import type { TAppointment } from '@interfaces/Appointment.interface';
 
 import { cardPadding } from './CalendarBody';
 

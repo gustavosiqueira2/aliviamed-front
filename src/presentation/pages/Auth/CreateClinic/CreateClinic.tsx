@@ -13,7 +13,7 @@ import { useNotificationContext } from '@contexts/NotificationContext';
 
 import { getApiError } from '@functions/getApiError';
 
-import { useAuth, useCreateClinic, logout } from '@store/AuthStore';
+import { useAuth, useCreateClinic, logout } from '@store/Auth.store';
 
 import PublicLayout from '@components/Layout/PublicLayout';
 import TextInput from '@components/Form/TextInput';

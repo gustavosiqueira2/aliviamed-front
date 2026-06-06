@@ -4,11 +4,11 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { Button, Segmented, Typography } from 'antd';
 
-import {
-  useAppointments,
-  type TAppointment,
-  type TGetAppointmentResponse,
-} from '@store/Appointment';
+import { useAppointments } from '@store/Appointment.store';
+import type {
+  TAppointment,
+  TAppointmentResponse,
+} from '@interfaces/Appointment.interface';
 
 import { PERMISSIONS } from '@constants/PERMISSIONS';
 
@@ -55,7 +55,7 @@ const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
   const appointments = useMemo(
     () =>
       queries.map(
-        (q) => (q.data || { ...q, data: [] }) as TGetAppointmentResponse,
+        (q) => (q.data || { ...q, data: [] }) as TAppointmentResponse,
       ),
     [queries],
   );

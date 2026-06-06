@@ -10,7 +10,7 @@ import { ROLE_COLORS } from '@constants/ROLE_COLORS';
 
 import { translateRole } from '@functions/translateRole';
 
-import { logout, useAuth } from '@store/AuthStore';
+import { logout, useAuth } from '@store/Auth.store';
 import { useTheme, type TThemeMode } from '@contexts/ThemeContext';
 
 import FadeWrapper from '@components/FadeWrapper';

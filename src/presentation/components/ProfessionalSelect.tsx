@@ -11,7 +11,7 @@ import {
 
 import { useDebounce } from '@hooks/useDebounce';
 
-import { useSearchProfessional } from '@store/ClinicStore';
+import { useSearchProfessional } from '@store/Clinic.store';
 
 type TProfessionalSelectProps<T extends FieldValues> = {
   control: Control<T>;

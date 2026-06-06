@@ -7,7 +7,7 @@ import { Hospital, Users } from 'lucide-react';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
-import { logout } from '@store/AuthStore';
+import { logout } from '@store/Auth.store';
 
 import PublicLayout from '@components/Layout/PublicLayout';
 

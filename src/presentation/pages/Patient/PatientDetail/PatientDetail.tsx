@@ -14,8 +14,8 @@ import { calculateAge } from '@functions/calculateAge';
 import { translateSex } from '@functions/translateSex';
 import { formatDocument } from '@functions/formatDocument';
 
-import { usePatient } from '@store/PatientStore';
-import { type TGetConsultApiReturn } from '@store/Consult';
+import { usePatient } from '@store/Patient.store';
+import { type TConsult } from '@interfaces/Consult.interface';
 
 import Can from '@components/Can/Can';
 import PreviousConsultsList from '@components/Consult/PreviousConsultsList';
@@ -30,7 +30,7 @@ const PatientDetail = () => {
   const { data: patient } = usePatient(patientId!);
 
   const [selectedConsult, setSelectedConsult] =
-    useState<TGetConsultApiReturn | null>(null);
+    useState<TConsult | null>(null);
 
   if (!patient) return;
 

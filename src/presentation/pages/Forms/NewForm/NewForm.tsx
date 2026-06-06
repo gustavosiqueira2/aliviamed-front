@@ -21,7 +21,7 @@ import { DragDropProvider, type DragOverEvent } from '@dnd-kit/react';
 
 import { DEFAULT_FORM_INPUT_GROUP } from '@constants/DEFAULT_FORM_INPUT_GROUP';
 
-import { useAuth } from '@store/AuthStore';
+import { useAuth } from '@store/Auth.store';
 
 import FormPreview from '@pages/Forms/NewForm/components/FormPreview';
 

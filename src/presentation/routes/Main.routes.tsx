@@ -8,7 +8,7 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useAuth } from '@store/AuthStore';
+import { useAuth } from '@store/Auth.store';
 
 import CompleteRegistration from '@pages/Auth/CompleteRegistration/CompleteRegistration';
 import Onboarding from '@pages/Auth/Onboarding/Onboarding';

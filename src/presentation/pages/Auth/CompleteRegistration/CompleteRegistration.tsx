@@ -8,7 +8,7 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useCompleteRegistration } from '@store/AuthStore';
+import { useCompleteRegistration } from '@store/Auth.store';
 
 import LoginLayout from '@components/Layout/LoginLayout';
 import TextInput from '@components/Form/TextInput';

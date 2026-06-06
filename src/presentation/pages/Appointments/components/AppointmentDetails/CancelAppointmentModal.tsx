@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import { Input, Modal, Typography } from 'antd';
 
-import type { TAppointment } from '@store/Appointment';
+import type { TAppointment } from '@interfaces/Appointment.interface';
 
 const { Paragraph } = Typography;
 const { TextArea } = Input;

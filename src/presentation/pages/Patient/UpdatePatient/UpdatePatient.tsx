@@ -15,7 +15,7 @@ import { getApiError } from '@functions/getApiError';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { usePatient, useUpdatePatient } from '@store/PatientStore';
+import { usePatient, useUpdatePatient } from '@store/Patient.store';
 
 import TextInput from '@components/Form/TextInput';
 import DateInput from '@components/Form/DateInput';

@@ -1,7 +1,7 @@
 import type { TPermission } from '@constants/PERMISSIONS';
 
-import { useAuth } from '@store/AuthStore';
-import { useClinic } from '@store/ClinicStore';
+import { useAuth } from '@store/Auth.store';
+import { useClinic } from '@store/Clinic.store';
 
 export const usePermissions = () => {
   const { data: auth } = useAuth();

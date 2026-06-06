@@ -14,9 +14,9 @@ import {
   useConsultByAppointmentId,
   useFinishConsult,
   useUpdateConsult,
-  type TGetConsultApiReturn,
-} from '@store/Consult';
-import { usePatient } from '@store/PatientStore';
+} from '@store/Consult.store';
+import type { TConsult } from '@interfaces/Consult.interface';
+import { usePatient } from '@store/Patient.store';
 
 import { useDebounce } from '@hooks/useDebounce';
 
@@ -61,7 +61,7 @@ const Consult = () => {
 
   const [isFinishingConsultation, setIsFinishingConsultation] = useState(false);
   const [selectedConsult, setSelectedConsult] =
-    useState<TGetConsultApiReturn | null>(null);
+    useState<TConsult | null>(null);
 
   const { control, reset, formState } = useForm<TConsultForm>();
 

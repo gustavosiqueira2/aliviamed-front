@@ -15,7 +15,7 @@ import { getApiError } from '@functions/getApiError';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
-import { useCreateAppointment } from '@store/Appointment';
+import { useCreateAppointment } from '@store/Appointment.store';
 
 import ProfessionalSelect from '@components/ProfessionalSelect';
 import SelectInput from '@components/Form/SelectInput';

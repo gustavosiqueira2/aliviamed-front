@@ -7,7 +7,7 @@ import { ROLE_COLORS } from '@constants/ROLE_COLORS';
 
 import { translateRole } from '@functions/translateRole';
 
-import type { TClinicUser, TPermissionCatalog } from '@store/ClinicStore';
+import type { TClinicUser, TClinicPermissionCatalog } from '@interfaces/Clinic.interface';
 
 const { Title, Text } = Typography;
 
@@ -57,7 +57,7 @@ type TEditRoleModalProps = {
   pending: boolean;
   open: boolean;
   user: TClinicUser | null;
-  catalog?: TPermissionCatalog;
+  catalog?: TClinicPermissionCatalog;
   onClose: () => void;
   onSubmitRole: (role: TRole) => void;
   onSubmitPermissions: (permissions: string[]) => void;

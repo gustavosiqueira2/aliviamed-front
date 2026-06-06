@@ -11,7 +11,7 @@ import {
 
 import { useDebounce } from '@hooks/useDebounce';
 
-import { useSearchPatients } from '@store/PatientStore';
+import { useSearchPatients } from '@store/Patient.store';
 
 type TPatientSelectProps<T extends FieldValues> = {
   control: Control<T>;
