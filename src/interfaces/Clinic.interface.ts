@@ -1,12 +1,14 @@
 import type { USER_ROLES } from '@constants/USER_ROLES';
 
+export type TClinicUserStatus = 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'ARCHIVED';
+
 export type TClinicUser = {
   userId: string;
   name: string;
   email: string;
   role: keyof typeof USER_ROLES;
   permissions: string[];
-  active: boolean;
+  status: TClinicUserStatus;
 };
 
 export type TClinicResponse = {

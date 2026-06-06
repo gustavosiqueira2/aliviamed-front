@@ -119,8 +119,8 @@ const AddCollaboratorModal: React.FC<TAddCollaboratorModalProps> = (props) => {
                 <CircleAlert size={16} color={colorPrimary} />
 
                 <span className="text-xs">
-                  Ao enviar o colaborador receberá uma{' '}
-                  <b style={{ color: colorPrimary }}>confirmação no email</b>
+                  Ao enviar, o colaborador receberá um{' '}
+                  <b style={{ color: colorPrimary }}>convite por email</b>
                 </span>
               </div>
             }

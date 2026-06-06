@@ -13,6 +13,7 @@ import { PERMISSIONS } from '@constants/PERMISSIONS';
 
 import {
   useAddCollaborator,
+  useArchiveUser,
   useChangeUserPermissions,
   useChangeUserRole,
   useChangeUserStatus,
@@ -46,6 +47,8 @@ const Clinic = () => {
     useAddCollaborator();
   const { mutateAsync: changeUserStatus, isPending: isPendingChangeStatus } =
     useChangeUserStatus();
+  const { mutateAsync: archiveUser, isPending: isPendingArchive } =
+    useArchiveUser();
   const { mutateAsync: changeUserRole, isPending: isPendingChangeRole } =
     useChangeUserRole();
   const {
@@ -62,7 +65,7 @@ const Clinic = () => {
       notify({
         type: 'success',
         title: 'Sucesso',
-        description: `${data.name} foi adicionado(a) a sua clinica, um email de confirmação foi enviado para ele(a)!`,
+        description: `${data.name} foi convidado(a) para a sua clínica, um convite foi enviado por e-mail para ele(a)!`,
       });
       setShowAddCollaboratorModal(false);
     } catch (err) {
@@ -159,6 +162,24 @@ const Clinic = () => {
     }
   };
 
+  const handleArchiveUser = async (userId: string) => {
+    try {
+      await archiveUser(userId);
+
+      notify({
+        type: 'success',
+        title: 'Sucesso',
+        description: 'O usuário foi arquivado!',
+      });
+    } catch (err) {
+      notify({
+        type: 'error',
+        title: 'Houve um problema',
+        description: getApiError(err),
+      });
+    }
+  };
+
   return (
     <FadeWrapper>
       <AddCollaboratorModal
@@ -202,11 +223,27 @@ const Clinic = () => {
               title: 'Status',
               align: 'center',
               className: 'w-0',
-              render: (v) => (
-                <Tag color={v.active ? 'blue' : ''} variant="outlined">
-                  {v.active ? 'Ativo' : 'Desativado'}
-                </Tag>
-              ),
+              render: (v: TClinicUser) => {
+                if (v.status === 'PENDING') {
+                  return <Tag color="orange">Pendente</Tag>;
+                }
+
+                if (v.status === 'ARCHIVED') {
+                  return (
+                    <Tag color="default" variant="outlined">
+                      Arquivado
+                    </Tag>
+                  );
+                }
+
+                const active = v.status === 'ACTIVE';
+
+                return (
+                  <Tag color={active ? 'blue' : ''} variant="outlined">
+                    {active ? 'Ativo' : 'Desativado'}
+                  </Tag>
+                );
+              },
             },
             { title: 'Nome', dataIndex: 'name' },
             { title: 'Email', dataIndex: 'email' },
@@ -222,18 +259,35 @@ const Clinic = () => {
               render: (v) => (
                 <div className="flex justify-end gap-2">
                   <Can permission={PERMISSIONS.CLINIC_USER_MANAGE}>
-                    {v.userId !== auth?.user.id && (
+                    {v.userId !== auth?.user.id && v.status === 'INACTIVE' && (
+                      <Button
+                        danger
+                        type="dashed"
+                        disabled={isPendingArchive}
+                        onClick={() => handleArchiveUser(v.userId)}
+                      >
+                        Arquivar
+                      </Button>
+                    )}
+                    {v.userId !== auth?.user.id && v.status === 'ACTIVE' && (
                       <Button
                         disabled={isPendingChangeStatus}
                         className="w-26"
-                        onClick={() =>
-                          handleChangeUserStatus(v.userId, !v.active)
-                        }
+                        onClick={() => handleChangeUserStatus(v.userId, false)}
                       >
-                        {v.active ? 'Desativar' : 'Ativar'}
+                        Desativar
                       </Button>
                     )}
-                    {v.userId !== auth?.user.id && (
+                    {v.userId !== auth?.user.id && v.status === 'INACTIVE' && (
+                      <Button
+                        disabled={isPendingChangeStatus}
+                        className="w-26"
+                        onClick={() => handleChangeUserStatus(v.userId, true)}
+                      >
+                        Ativar
+                      </Button>
+                    )}
+                    {v.userId !== auth?.user.id && v.status !== 'ARCHIVED' && (
                       <Button type="primary" onClick={() => setEditingUser(v)}>
                         Editar permissão
                       </Button>
