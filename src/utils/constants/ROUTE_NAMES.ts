@@ -13,6 +13,8 @@ export const ROUTE_NAMES = {
   HELP: '/help',
   PRIVACY: '/privacy',
 
+  INVITES: '/invites',
+
   PATIENTS: '/patients',
   NEW_PATIENT: '/new-patient',
 
@@ -23,7 +25,7 @@ export const ROUTE_NAMES = {
   FORMS: '/forms',
   NEW_FORM: '/new-form',
 
-  PATIENT_WORKFLOW: '/patient-workflow',
+  WORKFLOW: '/workflow',
 
   FINANCIAL: '/financial',
 

@@ -3,7 +3,6 @@ import {
   FilePen,
   Hospital,
   House,
-  Settings,
   UserRound,
   Wallet,
   Workflow,
@@ -16,15 +15,12 @@ import { PERMISSIONS, type TPermission } from '@constants/PERMISSIONS';
 
 type TMenuItem = NonNullable<MenuProps['items']>[number];
 
-import { useAuth } from '@store/Auth.store';
-
 import { usePermissions } from '@hooks/usePermissions';
 
 const SideBarOption = (
   handleNavigate: (route: ROUTE_NAME) => void,
   selectedRoute: ROUTE_NAME,
 ) => {
-  const { data } = useAuth();
   const { hasPermission } = usePermissions();
 
   const getIconColor = (defaultColor: string, route: ROUTE_NAME) => {
@@ -84,15 +80,15 @@ const SideBarOption = (
     },
     {
       item: {
-        key: ROUTE_NAMES.PATIENT_WORKFLOW,
+        key: ROUTE_NAMES.WORKFLOW,
         label: 'Eventos',
         icon: (
           <Workflow
             size={18}
-            {...getIconColor('#c026d3', ROUTE_NAMES.PATIENT_WORKFLOW)}
+            {...getIconColor('#c026d3', ROUTE_NAMES.WORKFLOW)}
           />
         ),
-        onClick: () => handleNavigate(ROUTE_NAMES.PATIENT_WORKFLOW),
+        onClick: () => handleNavigate(ROUTE_NAMES.WORKFLOW),
       },
     },
     {
@@ -123,29 +119,9 @@ const SideBarOption = (
     },
   ];
 
-  return {
-    start: start
-      .filter((entry) => !entry.permission || hasPermission(entry.permission))
-      .map((entry) => entry.item),
-    end: [
-      {
-        key: 'selected-clinic',
-        label: data?.clinicProfile?.clinic.name,
-        icon: <Hospital size={18} color="#52525b" />,
-      },
-      {
-        key: ROUTE_NAMES.SETTINGS,
-        label: 'Configurações',
-        icon: (
-          <Settings
-            size={18}
-            {...getIconColor('#52525b', ROUTE_NAMES.SETTINGS)}
-          />
-        ),
-        onClick: () => handleNavigate(ROUTE_NAMES.SETTINGS),
-      },
-    ] as TMenuItem[],
-  };
+  return start
+    .filter((entry) => !entry.permission || hasPermission(entry.permission))
+    .map((entry) => entry.item);
 };
 
 export default SideBarOption;

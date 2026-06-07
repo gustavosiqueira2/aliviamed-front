@@ -15,11 +15,76 @@ import type {
   TAuthMeResponse,
   TAuthRegisterPayload,
   TAuthResetPasswordPayload,
+  TClinicProfile,
 } from '@interfaces/Auth.interface';
 
 import api from '../../services/api';
 
 import { queryClient } from './QueryClient';
+
+const resolveActiveClinic = (
+  clinics: TClinicProfile[],
+): TClinicProfile | undefined => {
+  const activeClinics = clinics.filter((clinic) => clinic.status === 'ACTIVE');
+
+  const savedClinicId = window.localStorage.getItem(LOCAL_STORAGE_CLINIC_ID);
+
+  const saved =
+    savedClinicId &&
+    activeClinics.find((clinic) => clinic.clinic.id === savedClinicId);
+
+  const active = saved || activeClinics[0];
+
+  if (active) {
+    window.localStorage.setItem(LOCAL_STORAGE_CLINIC_ID, active.clinic.id);
+  } else {
+    window.localStorage.removeItem(LOCAL_STORAGE_CLINIC_ID);
+  }
+
+  return active;
+};
+
+/**
+ * QueryKeys cujos dados dependem da clínica atual (x-clinic-id). Ao trocar de
+ * clínica, são resetadas para refazer com o novo header — sem tocar em ['AUTH']
+ * (atualizada otimisticamente) nem em estado global (tema).
+ */
+const CLINIC_SCOPED_QUERY_KEYS = [
+  ['CLINIC'],
+  ['CLINIC-PERMISSIONS'],
+  ['CLINIC-PROFESSIONAL-SEARCH'],
+  ['PATIENTS'],
+  ['PATIENTS-SEARCH'],
+  ['PATIENT_CONSULT_HISTORY'],
+  ['APPOINTMENTS'],
+  ['ACTIVE_CONSULT'],
+  ['APPOINTMENT_CONSULT'],
+  ['FINANCIAL-CASH-FLOW'],
+  ['FINANCIAL-SUMMARY'],
+];
+
+export const switchClinic = (clinicId: string) => {
+  const current = queryClient.getQueryData<TAuthStore | null>(['AUTH']);
+
+  if (!current) return;
+
+  const target = current.userClinics.find(
+    (clinic) => clinic.clinic.id === clinicId && clinic.status === 'ACTIVE',
+  );
+
+  if (!target || target.clinic.id === current.clinicProfile?.clinic.id) return;
+
+  window.localStorage.setItem(LOCAL_STORAGE_CLINIC_ID, clinicId);
+
+  queryClient.setQueryData<TAuthStore>(['AUTH'], {
+    ...current,
+    clinicProfile: target,
+  });
+
+  CLINIC_SCOPED_QUERY_KEYS.forEach((queryKey) => {
+    queryClient.resetQueries({ queryKey });
+  });
+};
 
 export const useAuthUser = () =>
   useMutation({
@@ -45,35 +110,7 @@ const authUser = async ({
 
   window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, data.accessToken);
 
-  if (data.userClinics.length > 0) {
-    window.localStorage.setItem(
-      LOCAL_STORAGE_CLINIC_ID,
-      data.userClinics[0].clinic.id,
-    );
-  }
-
-  return { ...data, clinicProfile: data.userClinics[0] };
-};
-
-const completeRegistration = async ({
-  token,
-  password,
-}: TAuthCompleteRegistrationPayload): Promise<TAuthStore> => {
-  const { data } = await api.post<TAuthResponse>('/auth/complete-registration', {
-    token,
-    password,
-  });
-
-  window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, data.accessToken);
-
-  if (data.userClinics.length > 0) {
-    window.localStorage.setItem(
-      LOCAL_STORAGE_CLINIC_ID,
-      data.userClinics[0].clinic.id,
-    );
-  }
-
-  return { ...data, clinicProfile: data.userClinics[0] };
+  return { ...data, clinicProfile: resolveActiveClinic(data.userClinics) };
 };
 
 export const useCompleteRegistration = () =>
@@ -88,6 +125,23 @@ export const useCompleteRegistration = () =>
       );
     },
   });
+
+const completeRegistration = async ({
+  token,
+  password,
+}: TAuthCompleteRegistrationPayload): Promise<TAuthStore> => {
+  const { data } = await api.post<TAuthResponse>(
+    '/auth/complete-registration',
+    {
+      token,
+      password,
+    },
+  );
+
+  window.localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, data.accessToken);
+
+  return { ...data, clinicProfile: resolveActiveClinic(data.userClinics) };
+};
 
 export const useRegister = () => useMutation({ mutationFn: registerUser });
 
@@ -172,15 +226,9 @@ export const useAuth = () =>
           accessToken,
           user: data,
           userClinics: data.userClinics,
-          clinicProfile: data.userClinics[0],
+          invites: data.invites,
+          clinicProfile: resolveActiveClinic(data.userClinics),
         };
-
-        if (data.userClinics.length > 0) {
-          window.localStorage.setItem(
-            LOCAL_STORAGE_CLINIC_ID,
-            data.userClinics[0].clinic.id,
-          );
-        }
 
         return payload;
       }

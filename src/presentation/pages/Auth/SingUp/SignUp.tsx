@@ -57,12 +57,6 @@ const SignUp = () => {
     try {
       await authUser({ email: form.email, password: form.password });
 
-      notify({
-        type: 'success',
-        title: 'Sucesso',
-        description: 'Seu cadastro no Aliviamed foi realizado!',
-      });
-
       navigate(ROUTE_NAMES['/'], { replace: true });
     } catch {
       notify({

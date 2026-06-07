@@ -18,7 +18,7 @@ import { useAuth, useCreateClinic, logout } from '@store/Auth.store';
 import PublicLayout from '@components/Layout/PublicLayout';
 import TextInput from '@components/Form/TextInput';
 
-import { fetchCep } from '../../../../services/fetchCep';
+import { fetchCep } from '../../../../../../services/fetchCep';
 
 import {
   createClinicSchema,

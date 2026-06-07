@@ -9,6 +9,8 @@ import ProtectedRoute from './ProtectedRoute';
 
 import Home from '@pages/Home/Home';
 
+import Invites from '@pages/Invites/Invites';
+
 import PatientDetail from '@pages/Patient/PatientDetail/PatientDetail';
 import UpdatePatient from '@pages/Patient/UpdatePatient/UpdatePatient';
 import NewPatient from '@pages/Patient/NewPatient/NewPatient';
@@ -96,10 +98,12 @@ const AppRoutes = () => (
         }
       />
 
+      <Route path={ROUTE_NAMES.INVITES} element={<Invites />} />
+
       <Route path={ROUTE_NAMES.FORMS} element={<Forms />} />
       <Route path={ROUTE_NAMES.NEW_FORM} element={<NewForm />} />
 
-      <Route path={ROUTE_NAMES.PATIENT_WORKFLOW} element={<Workflows />} />
+      <Route path={ROUTE_NAMES.WORKFLOW} element={<Workflows />} />
 
       <Route path={ROUTE_NAMES.FINANCIAL} element={<Financial />} />
 

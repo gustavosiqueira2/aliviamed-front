@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Breadcrumb, Button, Card, Divider, Typography } from 'antd';
+import { Button, Card, Divider, Typography } from 'antd';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
@@ -65,113 +65,101 @@ const NewPatient = () => {
   };
 
   return (
-    <>
-      <Breadcrumb
-        items={[
-          {
-            title: 'Pacientes',
-            className: 'cursor-pointer',
-            onClick: () => navigate(ROUTE_NAMES.PATIENTS),
-          },
-          { title: 'Novo' },
-        ]}
-      />
-
+    <Card classNames={{ body: 'pt-3!' }}>
       <Title level={2}>Cadastrar novo Paciente</Title>
-      <Card>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Title level={4} className="mb-1!">
-            Dados básicos <span className="text-red-500">*</span>
-          </Title>
-          <Divider className="mt-0! mb-2!" />
-          <div className="flex gap-4">
-            <TextInput
-              control={control}
-              name="name"
-              label="Nome"
-              disabled={isPending}
-            />
-            <DateInput
-              control={control}
-              name="birthdate"
-              label="Data de nascimento"
-              type="number"
-              disabled={isPending}
-            />
-          </div>
 
-          <Title level={4} className="mt-4! mb-1!">
-            Dados adicionais
-          </Title>
-          <Divider className="mt-0! mb-2!" />
-          <div className="flex gap-4">
-            <TextInput
-              control={control}
-              name="document"
-              label="CPF"
-              optional
-              maxLength={14}
-              disabled={isPending}
-            />
-            <SelectInput
-              control={control}
-              name="sex"
-              label="Sexo"
-              optional
-              allowClear
-              options={[
-                { label: 'Masculino', value: 'MALE' },
-                { label: 'Feminino', value: 'FEMALE' },
-                { label: 'Outro', value: 'OTHER' },
-              ]}
-              disabled={isPending}
-            />
-          </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Title level={4} className="mb-1!">
+          Dados básicos <span className="text-red-500">*</span>
+        </Title>
+        <Divider className="mt-0! mb-2!" />
+        <div className="flex gap-4">
+          <TextInput
+            control={control}
+            name="name"
+            label="Nome"
+            disabled={isPending}
+          />
+          <DateInput
+            control={control}
+            name="birthdate"
+            label="Data de nascimento"
+            type="number"
+            disabled={isPending}
+          />
+        </div>
 
-          <Title level={4} className="mt-4! mb-1!">
-            Contato
-          </Title>
-          <Divider className="mt-0! mb-2!" />
-          <div className="flex gap-4">
-            <PhoneInput
-              control={control}
-              name="phone"
-              label="Telefone"
-              optional
-              disabled={isPending}
-            />
-            <PhoneInput
-              control={control}
-              name="emergencyPhone"
-              label="Telefone de emergência"
-              optional
-              disabled={isPending}
-            />
-          </div>
-          <div className="mt-2 flex gap-4">
-            <TextInput
-              control={control}
-              name="email"
-              label="E-mail"
-              type="email"
-              optional
-              disabled={isPending}
-            />
-          </div>
+        <Title level={4} className="mt-4! mb-1!">
+          Dados adicionais
+        </Title>
+        <Divider className="mt-0! mb-2!" />
+        <div className="flex gap-4">
+          <TextInput
+            control={control}
+            name="document"
+            label="CPF"
+            optional
+            maxLength={14}
+            disabled={isPending}
+          />
+          <SelectInput
+            control={control}
+            name="sex"
+            label="Sexo"
+            optional
+            allowClear
+            options={[
+              { label: 'Masculino', value: 'MALE' },
+              { label: 'Feminino', value: 'FEMALE' },
+              { label: 'Outro', value: 'OTHER' },
+            ]}
+            disabled={isPending}
+          />
+        </div>
 
-          <div className="flex justify-end">
-            <Button
-              disabled={isPending}
-              htmlType="submit"
-              type="primary"
-              className="mt-4"
-            >
-              Cadastrar
-            </Button>
-          </div>
-        </form>
-      </Card>
-    </>
+        <Title level={4} className="mt-4! mb-1!">
+          Contato
+        </Title>
+        <Divider className="mt-0! mb-2!" />
+        <div className="flex gap-4">
+          <PhoneInput
+            control={control}
+            name="phone"
+            label="Telefone"
+            optional
+            disabled={isPending}
+          />
+          <PhoneInput
+            control={control}
+            name="emergencyPhone"
+            label="Telefone de emergência"
+            optional
+            disabled={isPending}
+          />
+        </div>
+        <div className="mt-2 flex gap-4">
+          <TextInput
+            control={control}
+            name="email"
+            label="E-mail"
+            type="email"
+            optional
+            disabled={isPending}
+          />
+        </div>
+
+        <div className="flex justify-end">
+          <Button
+            disabled={isPending}
+            htmlType="submit"
+            type="primary"
+            className="mt-4"
+          >
+            Cadastrar
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 };
 

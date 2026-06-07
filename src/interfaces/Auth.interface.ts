@@ -1,5 +1,7 @@
 import type { USER_ROLES } from '@constants/USER_ROLES';
 
+import type { TClinicUserStatus } from './Clinic.interface';
+
 export type TUser = {
   id: string;
   name: string;
@@ -17,13 +19,21 @@ export type TClinicProfile = {
   createdAt: Date;
   updatedAt: Date;
   role: keyof typeof USER_ROLES;
+  status: TClinicUserStatus;
   clinic: TClinic;
+};
+
+export type TInvite = {
+  clinicId: string;
+  clinicName: string;
+  role: keyof typeof USER_ROLES;
 };
 
 export interface TAuthStore {
   accessToken: string;
   user: TUser;
   userClinics: TClinicProfile[];
+  invites: TInvite[];
   clinicProfile?: TClinicProfile;
 }
 
@@ -32,6 +42,7 @@ export type TAuthLoginPayload = { email: string; password: string };
 export type TAuthResponse = {
   accessToken: string;
   userClinics: TClinicProfile[];
+  invites: TInvite[];
   user: {
     id: string;
     createdAt: string;
@@ -73,4 +84,5 @@ export type TAuthMeResponse = {
   updatedAt: Date;
   name: string;
   userClinics: TClinicProfile[];
+  invites: TInvite[];
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router';
 
-import { Banana, FoldHorizontal } from 'lucide-react';
+import { FoldHorizontal } from 'lucide-react';
 import { Button, Layout, Menu, theme } from 'antd';
 import { AnimatePresence } from 'framer-motion';
 
@@ -12,6 +12,9 @@ import { useWidthBreakpoint } from '@hooks/useWidthBreakpoint';
 import { useTheme } from '@contexts/ThemeContext';
 
 import SideBarOption from './SideBarOption';
+import BaseHeader from './BaseHeader';
+
+import logo from '@assets/logo.svg';
 
 const { Sider, Content } = Layout;
 
@@ -50,7 +53,7 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
   };
 
   return (
-    <Layout className="h-full">
+    <Layout className="flex h-full flex-col">
       <Sider
         collapsible
         trigger={null}
@@ -68,7 +71,7 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
             shape="circle"
             onClick={() => handleNavigate('/')}
           >
-            <Banana />
+            <img src={logo} className="w-8" />
           </Button>
 
           <Button
@@ -83,31 +86,25 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
           </Button>
         </div>
 
-        <div className="flex h-full flex-col justify-between">
-          <Menu
-            theme="dark"
-            mode="inline"
-            selectedKeys={[selectedRoute]}
-            className={`flex-1 *:px-2.5! ${menuItemTextClass}`}
-            style={{ backgroundColor: colorBgLayout }}
-            items={SideBarOption(handleNavigate, selectedRoute).start}
-          />
-
-          <Menu
-            theme="dark"
-            mode="inline"
-            selectedKeys={[selectedRoute]}
-            className={`*:px-2.5! ${menuItemTextClass}`}
-            style={{ backgroundColor: colorBgLayout }}
-            items={SideBarOption(handleNavigate, selectedRoute).end}
-          />
-        </div>
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[selectedRoute]}
+          className={`flex-1 *:px-2.5! ${menuItemTextClass}`}
+          style={{ backgroundColor: colorBgLayout }}
+          items={SideBarOption(handleNavigate, selectedRoute)}
+        />
       </Sider>
-      <Layout>
-        <Content className="overflow-auto p-2">
-          <AnimatePresence mode="wait">{children}</AnimatePresence>
-        </Content>
-      </Layout>
+
+      <div className="flex flex-1 flex-col">
+        <BaseHeader />
+
+        <Layout>
+          <Content className="overflow-auto p-2 pt-0">
+            <AnimatePresence mode="wait">{children}</AnimatePresence>
+          </Content>
+        </Layout>
+      </div>
     </Layout>
   );
 };

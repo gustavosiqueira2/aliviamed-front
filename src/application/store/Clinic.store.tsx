@@ -56,6 +56,20 @@ const changeUserStatus = async ({ id, status }: TClinicChangeUserStatusPayload) 
   }
 };
 
+export const useAcceptInvite = () =>
+  useMutation({
+    mutationFn: acceptInvite,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['AUTH'] });
+    },
+  });
+
+const acceptInvite = async (clinicId: string) => {
+  const { data } = await api.patch(`/clinics/${clinicId}/accept`);
+
+  return data;
+};
+
 export const useArchiveUser = () =>
   useMutation({
     mutationFn: archiveUser,

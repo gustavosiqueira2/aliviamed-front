@@ -37,20 +37,20 @@ const Patients = () => {
 
   return (
     <FadeWrapper className="flex flex-col">
-      <div className="mb-2 flex items-center justify-between">
-        <Title level={2} className="mb-0!">
-          Pacientes
-        </Title>
-
-        <Can permission={PERMISSIONS.PATIENT_CREATE}>
-          <Link to={ROUTE_NAMES.NEW_PATIENT}>
-            <Button type="primary">Cadastrar novo</Button>
-          </Link>
-        </Can>
-      </div>
-
       <Card variant="borderless" classNames={{ body: 'p-0! ' }}>
-        <div className="flex gap-2 p-2">
+        <div className="flex items-center justify-between pt-2 pr-3 pb-1 pl-4">
+          <Title level={2} className="mb-0!">
+            Pacientes
+          </Title>
+
+          <Can permission={PERMISSIONS.PATIENT_CREATE}>
+            <Link to={ROUTE_NAMES.NEW_PATIENT}>
+              <Button type="primary">Cadastrar novo</Button>
+            </Link>
+          </Can>
+        </div>
+
+        <div className="flex gap-2 p-4 pt-0 pb-3">
           <Input
             allowClear
             className="max-w-[320px]"

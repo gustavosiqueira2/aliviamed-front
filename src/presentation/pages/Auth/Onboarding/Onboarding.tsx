@@ -7,12 +7,12 @@ import { Hospital, Users } from 'lucide-react';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
-import { logout } from '@store/Auth.store';
+import { logout, useAuth } from '@store/Auth.store';
 
 import PublicLayout from '@components/Layout/PublicLayout';
 
-import CreateClinic from '../CreateClinic/CreateClinic';
-import JoinClinic from './JoinClinic';
+import CreateClinic from './components/CreateClinic/CreateClinic';
+import JoinClinic from './components/JoinClinic';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -64,6 +64,10 @@ const Onboarding = () => {
     token: { colorPrimary },
   } = theme.useToken();
 
+  const { data } = useAuth();
+
+  const invites = data?.invites ?? [];
+
   const [step, setStep] = useState<TStep>('choice');
 
   if (step === 'create') {
@@ -71,7 +75,7 @@ const Onboarding = () => {
   }
 
   if (step === 'join') {
-    return <JoinClinic onBack={() => setStep('choice')} />;
+    return <JoinClinic invites={invites} onBack={() => setStep('choice')} />;
   }
 
   return (

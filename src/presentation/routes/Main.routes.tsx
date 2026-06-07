@@ -10,10 +10,11 @@ import { useNotificationContext } from '@contexts/NotificationContext';
 
 import { useAuth } from '@store/Auth.store';
 
-import CompleteRegistration from '@pages/Auth/CompleteRegistration/CompleteRegistration';
+import CompleteRegistration from '@pages/Public/CompleteRegistration/CompleteRegistration';
+import Privacy from '@pages/Public/Privacy/Privacy';
+import Help from '@pages/Public/Help/Help';
+
 import Onboarding from '@pages/Auth/Onboarding/Onboarding';
-import Help from '@pages/Auth/Help/Help';
-import Privacy from '@pages/Auth/Privacy/Privacy';
 
 import LoginRoutes from './Login.routes';
 import AppRoutes from './App.routes';
@@ -44,25 +45,25 @@ const MainRoutes = () => {
   return (
     <Routes>
       <Route
-        path={ROUTE_NAMES.COMPLETE_REGISTRATION}
-        element={<CompleteRegistration />}
-      />
-
-      <Route path={ROUTE_NAMES.HELP} element={<Help />} />
-      <Route path={ROUTE_NAMES.PRIVACY} element={<Privacy />} />
-
-      <Route
         path="*"
         element={
           !data?.accessToken ? (
             <LoginRoutes />
-          ) : data.userClinics.length === 0 ? (
+          ) : data.userClinics.length === 0 ||
+            (data && !data.userClinics.find((uc) => uc.status === 'ACTIVE')) ? (
             <Onboarding />
           ) : (
             <AppRoutes />
           )
         }
       />
+
+      <Route
+        path={ROUTE_NAMES.COMPLETE_REGISTRATION}
+        element={<CompleteRegistration />}
+      />
+      <Route path={ROUTE_NAMES.HELP} element={<Help />} />
+      <Route path={ROUTE_NAMES.PRIVACY} element={<Privacy />} />
     </Routes>
   );
 };
