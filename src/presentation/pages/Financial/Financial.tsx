@@ -1,4 +1,4 @@
-import { Card, Empty, Table, Tag, Typography } from 'antd';
+import { Card, Empty, Table, Tag } from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -13,20 +13,12 @@ import FadeWrapper from '@components/FadeWrapper';
 
 import SummaryCard from './components/SummaryCard';
 
-const { Title } = Typography;
-
 const Financial = () => {
   const { data: summary } = useFinancialSummary();
   const { data: cashFlow } = useCashFlow();
 
   return (
     <FadeWrapper>
-      <div className="mb-3 flex items-center justify-between">
-        <Title level={2} className="mb-0!">
-          Financeiro
-        </Title>
-      </div>
-
       <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <SummaryCard
           icon={HandCoins}
@@ -57,7 +49,7 @@ const Financial = () => {
         />
       </div>
 
-      <Card classNames={{ body: 'p-0!' }}>
+      <Card classNames={{ body: 'p-0! overflow-hidden' }}>
         <Table
           dataSource={cashFlow || []}
           rowKey="id"
@@ -71,7 +63,12 @@ const Financial = () => {
               className: 'w-0 whitespace-nowrap',
               render: (v: Date) => dayjs(v).format('DD/MM/YYYY'),
             },
-            { title: 'Descrição', dataIndex: 'description' },
+            {
+              title: 'Descrição',
+              dataIndex: 'description',
+              render: (v: string | null) =>
+                v || <span className="text-gray-400">—</span>,
+            },
             {
               title: 'Paciente',
               dataIndex: 'patientName',
@@ -95,14 +92,21 @@ const Financial = () => {
               title: 'Status',
               align: 'center',
               className: 'w-0',
-              render: ({ status }: TCashFlowEntry) => (
-                <Tag
-                  variant="outlined"
-                  color={status === 'PAID' ? 'blue' : 'gold'}
-                >
-                  {status === 'PAID' ? 'Pago' : 'Pendente'}
-                </Tag>
-              ),
+              render: ({ status }: TCashFlowEntry) => {
+                const STATUS_TAG = {
+                  PAID: { color: 'blue', label: 'Pago' },
+                  PENDING: { color: 'gold', label: 'Pendente' },
+                  CANCELED: { color: 'default', label: 'Cancelado' },
+                } as const;
+
+                const tag = STATUS_TAG[status];
+
+                return (
+                  <Tag variant="outlined" color={tag.color}>
+                    {tag.label}
+                  </Tag>
+                );
+              },
             },
             {
               title: 'Valor',

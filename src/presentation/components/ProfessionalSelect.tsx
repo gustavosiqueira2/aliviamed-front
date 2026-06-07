@@ -12,15 +12,18 @@ import {
 import { useDebounce } from '@hooks/useDebounce';
 
 import { useSearchProfessional } from '@store/Clinic.store';
+import type { TClinicSearchProfessional } from '@interfaces/Clinic.interface';
 
 type TProfessionalSelectProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
+  onSelected?: (professional: TClinicSearchProfessional | null) => void;
 };
 
 const ProfessionalSelect = <T extends FieldValues>({
   control,
   name,
+  onSelected,
 }: TProfessionalSelectProps<T>) => {
   const [search, setSearch] = useState('');
 
@@ -42,7 +45,13 @@ const ProfessionalSelect = <T extends FieldValues>({
               onSearch: setSearch,
             }}
             value={value}
-            onChange={onChange}
+            onChange={(selected) => {
+              onChange(selected);
+              onSelected?.(
+                data?.find((professional) => professional.id === selected) ??
+                  null,
+              );
+            }}
             loading={isLoading}
             placeholder="Buscar profissional"
             notFoundContent={

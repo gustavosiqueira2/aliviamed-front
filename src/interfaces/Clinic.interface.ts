@@ -9,6 +9,10 @@ export type TClinicUser = {
   role: keyof typeof USER_ROLES;
   permissions: string[];
   status: TClinicUserStatus;
+  specialty: string | null;
+  defaultAppointmentPrice: number | null;
+  returnAppointmentPrice: number | null;
+  urgentAppointmentPrice: number | null;
 };
 
 export type TClinicResponse = {
@@ -38,12 +42,24 @@ export type TClinicChangeUserPermissionsPayload = {
   permissions: string[];
 };
 
+export type TClinicUpdatePricesPayload = {
+  id: string;
+  defaultAppointmentPrice?: number;
+  returnAppointmentPrice?: number;
+  urgentAppointmentPrice?: number;
+};
+
 export type TClinicPermissionCatalog = {
   permissions: { key: string; label: string }[];
   presets: Partial<Record<keyof typeof USER_ROLES, string[]>>;
 };
 
-export type TClinicSearchProfessionalResponse = {
+export type TClinicSearchProfessional = {
   id: string;
   name: string;
-}[];
+  defaultAppointmentPrice: number | null;
+  returnAppointmentPrice: number | null;
+  urgentAppointmentPrice: number | null;
+};
+
+export type TClinicSearchProfessionalResponse = TClinicSearchProfessional[];

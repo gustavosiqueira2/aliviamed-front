@@ -76,7 +76,8 @@ export const useCreateAppointment = () =>
   });
 
 const createAppointment = async (data: TAppointmentCreatePayload) => {
-  const { professionalId, patientId, date, startHour, endHour } = data;
+  const { professionalId, patientId, date, startHour, endHour, type, price } =
+    data;
 
   const [startHourValue, startMinuteValue] = startHour.split(':');
   const [endHourValue, endMinuteValue] = endHour.split(':');
@@ -98,6 +99,8 @@ const createAppointment = async (data: TAppointmentCreatePayload) => {
     patientId,
     startsAt,
     endsAt,
+    ...(type ? { type } : {}),
+    ...(price != null ? { price } : {}),
   };
 
   await api.post('/appointment', payload);

@@ -16,11 +16,13 @@ import { useSearchPatients } from '@store/Patient.store';
 type TPatientSelectProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
+  onSelected?: (patient: { id: string; name: string } | null) => void;
 };
 
 const PatientSelect = <T extends FieldValues>({
   control,
   name,
+  onSelected,
 }: TPatientSelectProps<T>) => {
   const [search, setSearch] = useState('');
 
@@ -47,7 +49,13 @@ const PatientSelect = <T extends FieldValues>({
             notFoundContent={
               isLoading ? 'Buscando...' : 'Nenhum paciente encontrado'
             }
-            onChange={onChange}
+            onChange={(selected) => {
+              onChange(selected);
+              const patient = data?.find((item) => item.id === selected);
+              onSelected?.(
+                patient ? { id: patient.id, name: patient.name } : null,
+              );
+            }}
             options={data?.map((patient) => ({
               label: patient.name,
               value: patient.id,

@@ -14,6 +14,7 @@ export type TAppointment = {
   startsAt: Date;
   endsAt: Date;
   status: keyof typeof APPOINTMENT_STATUS;
+  type: TAppointmentType;
   checkedAt: Date | null;
   canceledAt: Date | null;
   canceledByUserId: string | null;
@@ -45,12 +46,16 @@ export type TAppointmentQuery = {
   professionalId?: string;
 };
 
+export type TAppointmentType = 'DEFAULT' | 'RETURN' | 'URGENT';
+
 export type TAppointmentCreatePayload = {
   professionalId: string;
   patientId: string;
   date: Date;
   startHour: string;
   endHour: string;
+  type?: TAppointmentType;
+  price?: number | null;
 };
 
 export type TAppointmentReschedulePayload = {

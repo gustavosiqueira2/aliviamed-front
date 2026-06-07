@@ -24,4 +24,6 @@ export const CreateAppointmentSchema = z.object({
       error: 'O Horário de fim é obrigatório',
     })
     .min(1, 'O Horário de fim é obrigatório'),
+  type: z.enum(['DEFAULT', 'RETURN', 'URGENT']),
+  price: z.number().min(0, 'Valor inválido').nullable().optional(),
 });

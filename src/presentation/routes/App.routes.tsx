@@ -28,11 +28,12 @@ import Workflows from '@pages/Workflows/Workflows';
 
 import Financial from '@pages/Financial/Financial';
 
-import Clinic from '@pages/Clinic/Clinic';
+import ClinicUser from '@pages/Clinic/ClinicUser/ClinicUser';
 
 import Settings from '@pages/Settings/Settings';
 
 import Page404 from '@pages/404';
+import Clinic from '@pages/Clinic/Clinic/Clinic';
 
 const AppRoutes = () => (
   <BaseLayout>
@@ -108,6 +109,7 @@ const AppRoutes = () => (
       <Route path={ROUTE_NAMES.FINANCIAL} element={<Financial />} />
 
       <Route path={ROUTE_NAMES.CLINIC} element={<Clinic />} />
+      <Route path={`${ROUTE_NAMES.CLINIC}/:userId`} element={<ClinicUser />} />
 
       <Route path={ROUTE_NAMES.SETTINGS} element={<Settings />} />
 

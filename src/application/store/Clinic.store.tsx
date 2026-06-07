@@ -8,6 +8,7 @@ import type {
   TClinicChangeUserStatusPayload,
   TClinicResponse,
   TClinicPermissionCatalog,
+  TClinicUpdatePricesPayload,
 } from '@interfaces/Clinic.interface';
 
 import api from '../../services/api';
@@ -80,6 +81,30 @@ export const useArchiveUser = () =>
 
 const archiveUser = async (id: string) => {
   await api.patch('/clinic/users/archive', { id });
+};
+
+export const useUnarchiveUser = () =>
+  useMutation({
+    mutationFn: unarchiveUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['CLINIC'] });
+    },
+  });
+
+const unarchiveUser = async (id: string) => {
+  await api.patch('/clinic/users/unarchive', { id });
+};
+
+export const useUpdateUserPrices = () =>
+  useMutation({
+    mutationFn: updateUserPrices,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['CLINIC'] });
+    },
+  });
+
+const updateUserPrices = async (payload: TClinicUpdatePricesPayload) => {
+  await api.patch('/clinic/users/prices', payload);
 };
 
 export const useChangeUserRole = () =>

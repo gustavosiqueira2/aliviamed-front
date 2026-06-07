@@ -1,10 +1,10 @@
 export type TCashFlowType = 'INCOME' | 'EXPENSE';
-export type TCashFlowStatus = 'PAID' | 'PENDING';
+export type TCashFlowStatus = 'PAID' | 'PENDING' | 'CANCELED';
 
 export type TCashFlowEntry = {
   id: string;
   date: Date;
-  description: string;
+  description: string | null;
   patientName: string | null;
   type: TCashFlowType;
   status: TCashFlowStatus;
@@ -18,11 +18,10 @@ export type TFinancialSummary = {
   monthBalance: number;
 };
 
-// Formato esperado da futura API (datas como string ISO).
 export interface TCashFlowEntryReturn {
   id: string;
   date: string;
-  description: string;
+  description: string | null;
   patientName: string | null;
   type: TCashFlowType;
   status: TCashFlowStatus;

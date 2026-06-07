@@ -7,10 +7,6 @@ export type TViaCepAddress = {
 
 type TViaCepResponse = Partial<TViaCepAddress> & { erro?: boolean };
 
-/**
- * Consulta o ViaCEP e retorna o endereço, ou null se o CEP for inválido/não
- * encontrado. Chamada direta (fora do axios `api`) por ser um serviço externo.
- */
 export const fetchCep = async (cep: string): Promise<TViaCepAddress | null> => {
   const digits = cep.replace(/\D/g, '');
 
