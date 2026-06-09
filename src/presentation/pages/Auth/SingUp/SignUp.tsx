@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Button, Card, theme, Typography } from 'antd';
+import { Button, Card, Divider, theme, Typography } from 'antd';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
@@ -11,6 +11,7 @@ import { useNotificationContext } from '@contexts/NotificationContext';
 
 import { useAuthUser, useRegister } from '@store/Auth.store';
 
+import GoogleLoginButton from '@components/GoogleLoginButton';
 import PhoneInput from '@components/Form/PhoneInput';
 import DateInput from '@components/Form/DateInput';
 import TextInput from '@components/Form/TextInput';
@@ -149,6 +150,10 @@ const SignUp = () => {
         >
           Criar conta
         </Button>
+
+        <Divider className="my-4!">ou</Divider>
+
+        <GoogleLoginButton />
       </Card>
     </form>
   );

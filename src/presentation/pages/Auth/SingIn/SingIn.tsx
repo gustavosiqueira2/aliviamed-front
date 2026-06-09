@@ -9,12 +9,14 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 
 import { useNotificationContext } from '@contexts/NotificationContext';
 
+import { getApiError } from '@functions/getApiError';
+
 import { useAuthUser } from '@store/Auth.store';
 
+import GoogleLoginButton from '@components/GoogleLoginButton';
 import TextInput from '@components/Form/TextInput';
 
 import { type TSignInForm, signInSchema } from './SingInSchema';
-import { getApiError } from '@functions/getApiError';
 
 const { Title, Text } = Typography;
 
@@ -62,18 +64,11 @@ const SingIn = () => {
           ambiente?
         </Text>
 
-        {/* <Button
-          size="large"
-          variant="solid"
-          color="red"
-          className="w-full mt-4! py-2!"
-          // icon={<Google />}
-          // onClick={handleLoginWithGoogle}
-        >
-          Conecte com o Google
-        </Button> */}
+        <div className="mt-4">
+          <GoogleLoginButton />
+        </div>
 
-        <Divider className="my-4! font-normal! text-gray-600!"></Divider>
+        <Divider className="my-4! font-normal! text-gray-600!">ou</Divider>
 
         <div className="flex flex-col gap-2">
           <TextInput

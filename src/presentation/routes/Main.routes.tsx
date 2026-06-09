@@ -15,6 +15,7 @@ import Privacy from '@pages/Public/Privacy/Privacy';
 import Help from '@pages/Public/Help/Help';
 
 import Onboarding from '@pages/Auth/Onboarding/Onboarding';
+import GoogleCallback from '@pages/Auth/GoogleCallback/GoogleCallback';
 
 import LoginRoutes from './Login.routes';
 import AppRoutes from './App.routes';
@@ -61,6 +62,10 @@ const MainRoutes = () => {
       <Route
         path={ROUTE_NAMES.COMPLETE_REGISTRATION}
         element={<CompleteRegistration />}
+      />
+      <Route
+        path={ROUTE_NAMES.GOOGLE_CALLBACK}
+        element={<GoogleCallback />}
       />
       <Route path={ROUTE_NAMES.HELP} element={<Help />} />
       <Route path={ROUTE_NAMES.PRIVACY} element={<Privacy />} />

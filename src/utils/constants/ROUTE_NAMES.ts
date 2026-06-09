@@ -9,6 +9,7 @@ export const ROUTE_NAMES = {
   COMPLETE_REGISTRATION: '/complete-registration',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
+  GOOGLE_CALLBACK: '/auth/google/callback',
 
   HELP: '/help',
   PRIVACY: '/privacy',
