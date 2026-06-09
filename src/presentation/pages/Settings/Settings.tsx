@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { Card, Descriptions, Menu, Modal, Tag, Typography } from 'antd';
-import { Check, Info, LogOut, Monitor, Moon, Palette, Sun } from 'lucide-react';
+import {
+  CalendarCheck,
+  Check,
+  Info,
+  LogOut,
+  Monitor,
+  Moon,
+  Palette,
+  Sun,
+} from 'lucide-react';
 
 import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 import { ROLE_COLORS } from '@constants/ROLE_COLORS';
@@ -11,13 +20,16 @@ import { ROLE_COLORS } from '@constants/ROLE_COLORS';
 import { translateRole } from '@functions/translateRole';
 
 import { logout, useAuth } from '@store/Auth.store';
+import { queryClient } from '@store/QueryClient';
 import { useTheme, type TThemeMode } from '@contexts/ThemeContext';
+import { useNotificationContext } from '@contexts/NotificationContext';
 
 import FadeWrapper from '@components/FadeWrapper';
+import GoogleCalendarCard from './components/GoogleCalendarCard';
 
 const { Title, Text } = Typography;
 
-type TSettingsSection = 'info' | 'appearance';
+type TSettingsSection = 'info' | 'appearance' | 'integrations';
 
 const PALETTES = {
   light: { bg: '#ffffff', side: '#f0f0f0', line: '#e5e7eb', accent: '#8b5cf6' },
@@ -95,6 +107,9 @@ const ThemeOption: React.FC<{
 
 const Settings = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { notify } = useNotificationContext();
 
   const { data } = useAuth();
   const { mode, setMode } = useTheme();
@@ -103,6 +118,61 @@ const Settings = () => {
   const [confirmLogout, setConfirmLogout] = useState(false);
 
   const role = data?.clinicProfile?.role;
+
+  useEffect(() => {
+    const result = searchParams.get('google_calendar');
+
+    if (!result) return;
+
+    setSection('integrations');
+    queryClient.invalidateQueries({ queryKey: ['GOOGLE_CALENDAR_STATUS'] });
+
+    notify(
+      result === 'connected'
+        ? {
+            type: 'success',
+            title: 'Google Agenda conectada',
+            description: 'Seus novos agendamentos serão criados na sua agenda.',
+          }
+        : {
+            type: 'error',
+            title: 'Não foi possível conectar',
+            description: 'Tente novamente.',
+          },
+    );
+
+    setSearchParams(
+      (params) => {
+        params.delete('google_calendar');
+
+        return params;
+      },
+      { replace: true },
+    );
+  }, [searchParams, setSearchParams, notify]);
+
+  useEffect(() => {
+    const requested = searchParams.get('section');
+
+    if (
+      requested !== 'info' &&
+      requested !== 'appearance' &&
+      requested !== 'integrations'
+    ) {
+      return;
+    }
+
+    setSection(requested);
+
+    setSearchParams(
+      (params) => {
+        params.delete('section');
+
+        return params;
+      },
+      { replace: true },
+    );
+  }, [searchParams, setSearchParams]);
 
   const handleLogout = () => {
     logout();
@@ -136,6 +206,11 @@ const Settings = () => {
               key: 'appearance',
               label: 'Aparência',
               icon: <Palette size={16} />,
+            },
+            {
+              key: 'integrations',
+              label: 'Integrações',
+              icon: <CalendarCheck size={16} />,
             },
             { type: 'divider' },
             {
@@ -193,6 +268,8 @@ const Settings = () => {
               </div>
             </div>
           )}
+
+          {section === 'integrations' && <GoogleCalendarCard />}
         </div>
       </Card>
 
