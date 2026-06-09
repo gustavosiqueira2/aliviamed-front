@@ -1,10 +1,12 @@
-import { useCallback, useMemo, useState, memo } from 'react';
+import { useCallback, useEffect, useMemo, useState, memo } from 'react';
 
 import dayjs, { Dayjs } from 'dayjs';
 
 import { Button, Segmented, Typography } from 'antd';
 
-import { useAppointments } from '@store/Appointment.store';
+import { useSearchParams } from 'react-router';
+
+import { useAppointment, useAppointments } from '@store/Appointment.store';
 import type {
   TAppointment,
   TAppointmentResponse,
@@ -33,9 +35,17 @@ const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
   const { hasPermission } = usePermissions();
   const canCreateAppointment = hasPermission(PERMISSIONS.APPOINTMENT_CREATE);
 
-  const [mode, setMode] = useState<TCalendarModes>('week');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
+  const [mode, setMode] = useState<TCalendarModes>(
+    (searchParams.get('mode') as TCalendarModes) || 'week',
+  );
+
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(() => {
+    const date = searchParams.get('date');
+
+    return date ? dayjs(date) : dayjs();
+  });
 
   const dates = useMemo(() => {
     if (mode === 'day') {
@@ -51,6 +61,57 @@ const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
 
   const [selectedAppointment, setSelectedAppointment] =
     useState<TAppointment>();
+
+  const openAppointmentId = searchParams.get('appointment') ?? undefined;
+
+  const selectAppointment = useCallback(
+    (appointment?: TAppointment) => {
+      setSelectedAppointment(appointment);
+
+      setSearchParams(
+        (params) => {
+          if (appointment) {
+            params.set('appointment', appointment.id);
+          } else {
+            params.delete('appointment');
+          }
+
+          return params;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
+
+  useEffect(() => {
+    const date = selectedDate.format('YYYY-MM-DD');
+
+    if (
+      searchParams.get('date') === date &&
+      searchParams.get('mode') === mode
+    ) {
+      return;
+    }
+
+    setSearchParams(
+      (params) => {
+        params.set('date', date);
+        params.set('mode', mode);
+
+        return params;
+      },
+      { replace: true },
+    );
+  }, [selectedDate, mode, searchParams, setSearchParams]);
+
+  const { data: openAppointment } = useAppointment(openAppointmentId);
+
+  useEffect(() => {
+    if (openAppointment && !selectedAppointment) {
+      setSelectedAppointment(openAppointment);
+    }
+  }, [openAppointment, selectedAppointment]);
 
   const appointments = useMemo(
     () =>
@@ -82,7 +143,6 @@ const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
     () => (
       <AppointmentDetails
         appointment={selectedAppointment}
-        onCloseDetails={() => setSelectedAppointment(undefined)}
         onChangeAppointmentStatus={(status) =>
           setSelectedAppointment(
             (appointment) =>
@@ -133,8 +193,8 @@ const AppointmentCalendar: React.FC<TAppointmentCalendarProps> = ({
         onHeaderDateClick={handleHeaderDateClick}
         onCellClick={handleCellClick}
         onBackToWeekMode={handleBackToWeekMode}
-        onSelectAppointment={(appointments) => {
-          setSelectedAppointment(appointments);
+        onSelectAppointment={(appointment) => {
+          selectAppointment(appointment);
         }}
         onMonthDayClick={(date) => {
           setSelectedDate(date);

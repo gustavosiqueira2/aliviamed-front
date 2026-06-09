@@ -313,7 +313,10 @@ const CreateAppointmentModal: React.FC<TCreateAppointmentModalProps> = (
               <div className="flex items-center gap-2">
                 {selectedProfessional ? (
                   <>
-                    <InitialsAvatar name={selectedProfessional.name} />
+                    <InitialsAvatar
+                      size={32}
+                      name={selectedProfessional.name}
+                    />
                     <div className="flex flex-col">
                       <Text strong>{selectedProfessional.name}</Text>
                       <Text type="secondary" className="text-xs!">
@@ -331,7 +334,7 @@ const CreateAppointmentModal: React.FC<TCreateAppointmentModalProps> = (
               <div className="flex items-center gap-2">
                 {selectedPatient ? (
                   <>
-                    <InitialsAvatar name={selectedPatient.name} />
+                    <InitialsAvatar size={32} name={selectedPatient.name} />
                     <div className="flex flex-col">
                       <Text strong>{selectedPatient.name}</Text>
                       <Text type="secondary" className="text-xs!">

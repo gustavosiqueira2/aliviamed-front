@@ -15,6 +15,7 @@ export type TAppointment = {
   endsAt: Date;
   status: keyof typeof APPOINTMENT_STATUS;
   type: TAppointmentType;
+  price?: number | null;
   checkedAt: Date | null;
   canceledAt: Date | null;
   canceledByUserId: string | null;
@@ -27,6 +28,20 @@ export type TAppointment = {
     id: string;
     name: string;
   };
+};
+
+export type TAppointmentDetail = TAppointment & {
+  specialty: string | null;
+  patient: {
+    id: string;
+    name: string;
+    phone: string | null;
+  };
+  clinic: {
+    id: string;
+    name: string;
+    address: string | null;
+  } | null;
 };
 
 export type TAppointmentReturn = {

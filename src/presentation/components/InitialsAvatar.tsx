@@ -1,5 +1,3 @@
-import { Avatar, type AvatarProps } from 'antd';
-
 const COLORS = [
   '#1677ff',
   '#10b981',
@@ -17,9 +15,7 @@ const getInitials = (name: string) => {
   if (parts.length === 0) return '?';
   if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
 
-  return (
-    parts[0].charAt(0) + parts[parts.length - 1].charAt(0)
-  ).toUpperCase();
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 
 const colorFromName = (name: string) => {
@@ -34,12 +30,31 @@ const colorFromName = (name: string) => {
 
 type TInitialsAvatarProps = {
   name: string;
-} & Omit<AvatarProps, 'children'>;
+  size?: number;
+  fontSize?: number;
+  shadow?: boolean;
+};
 
-const InitialsAvatar = ({ name, style, ...rest }: TInitialsAvatarProps) => (
-  <Avatar style={{ backgroundColor: colorFromName(name), ...style }} {...rest}>
+const InitialsAvatar = ({
+  name,
+  size = 32,
+  fontSize = 12,
+  shadow = false,
+}: TInitialsAvatarProps) => (
+  <div
+    style={{
+      fontSize: fontSize,
+      background: `linear-gradient(140deg, ${colorFromName(name)}65, ${colorFromName(name)})`,
+      minWidth: size,
+      minHeight: size,
+      width: size,
+      height: size,
+      boxShadow: shadow ? `${colorFromName(name)}28 0px 6px 20px 5px` : '',
+    }}
+    className="flex items-center justify-center rounded-full text-white"
+  >
     {getInitials(name)}
-  </Avatar>
+  </div>
 );
 
 export default InitialsAvatar;

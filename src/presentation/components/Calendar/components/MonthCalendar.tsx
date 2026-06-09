@@ -37,9 +37,9 @@ const MonthCalendar: React.FC<TMonthCalendarProps> = (props) => {
   };
 
   return (
-    <div className="border-b border-gray-100/80 px-2 py-4">
-      <div className="flex items-center justify-between pb-2">
-        <div className="pl-4">
+    <div className="border-b border-gray-100/80 p-2">
+      <div className="flex items-center justify-between">
+        <div className="pl-2.5">
           {currentDate
             .format('MMMM [de] YYYY')
             .replace(/^./, (c) => c.toUpperCase())}
@@ -68,9 +68,9 @@ const MonthCalendar: React.FC<TMonthCalendarProps> = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center gap-2 px-2">
+      <div className="flex flex-col justify-center gap-0 px-1">
         {calendarMonth.map((week, i) => (
-          <div key={`week-${i}`} className="flex justify-center gap-2">
+          <div key={`week-${i}`} className="flex flex-1 justify-evenly gap-2">
             {week.map((day) => {
               const isSelectedDate = selectedDate?.isSame(day.date, 'date');
 

@@ -78,19 +78,7 @@ const SideBarOption = (
         onClick: () => handleNavigate(ROUTE_NAMES.FORMS),
       },
     },
-    {
-      item: {
-        key: ROUTE_NAMES.WORKFLOW,
-        label: 'Eventos',
-        icon: (
-          <Workflow
-            size={18}
-            {...getIconColor('#c026d3', ROUTE_NAMES.WORKFLOW)}
-          />
-        ),
-        onClick: () => handleNavigate(ROUTE_NAMES.WORKFLOW),
-      },
-    },
+
     {
       item: {
         key: ROUTE_NAMES.FINANCIAL,
@@ -98,7 +86,7 @@ const SideBarOption = (
         icon: (
           <Wallet
             size={18}
-            {...getIconColor('#0d9488', ROUTE_NAMES.FINANCIAL)}
+            {...getIconColor('#f59e0b', ROUTE_NAMES.FINANCIAL)}
           />
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.FINANCIAL),
@@ -115,6 +103,19 @@ const SideBarOption = (
           />
         ),
         onClick: () => handleNavigate(ROUTE_NAMES.CLINIC),
+      },
+    },
+    {
+      item: {
+        key: ROUTE_NAMES.WORKFLOW,
+        label: 'Eventos',
+        icon: (
+          <Workflow
+            size={18}
+            {...getIconColor('#c026d3', ROUTE_NAMES.WORKFLOW)}
+          />
+        ),
+        onClick: () => handleNavigate(ROUTE_NAMES.WORKFLOW),
       },
     },
   ];

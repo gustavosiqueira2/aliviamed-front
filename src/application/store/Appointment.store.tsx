@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 
-import { useMutation, useQueries } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery } from '@tanstack/react-query';
 
 import {
   APPOINTMENT_STATUS,
@@ -9,6 +9,7 @@ import {
 
 import type {
   TAppointment,
+  TAppointmentDetail,
   TAppointmentStatusChange,
   TAppointmentCreatePayload,
   TAppointmentResponse,
@@ -64,6 +65,19 @@ const getAppointments = async ({
     ...data,
   };
 };
+
+const getAppointment = async (id: string): Promise<TAppointmentDetail> => {
+  const { data } = await api.get<TAppointmentDetail>(`/appointment/${id}`);
+
+  return data;
+};
+
+export const useAppointment = (id?: string) =>
+  useQuery({
+    queryKey: ['APPOINTMENT', id],
+    queryFn: () => getAppointment(id!),
+    enabled: !!id,
+  });
 
 export const useCreateAppointment = () =>
   useMutation({

@@ -15,6 +15,7 @@ import SideBarOption from './SideBarOption';
 import BaseHeader from './BaseHeader';
 
 import logo from '@assets/logo.svg';
+import UserProfileCard from './UserProfileCard';
 
 const { Sider, Content } = Layout;
 
@@ -94,6 +95,8 @@ const BaseLayout: React.FC<TBaseLayoutProps> = ({ children }) => {
           style={{ backgroundColor: colorBgLayout }}
           items={SideBarOption(handleNavigate, selectedRoute)}
         />
+
+        <UserProfileCard />
       </Sider>
 
       <div className="flex flex-1 flex-col">

@@ -10,6 +10,7 @@ import { useCashFlow, useFinancialSummary } from '@store/Financial.store';
 import type { TCashFlowEntry } from '@interfaces/Financial.interface';
 
 import FadeWrapper from '@components/FadeWrapper';
+import PayEntryButton from '@components/PayEntryButton';
 
 import SummaryCard from './components/SummaryCard';
 
@@ -122,6 +123,12 @@ const Financial = () => {
                   {formatCurrency(amount)}
                 </span>
               ),
+            },
+            {
+              title: '',
+              align: 'right',
+              className: 'w-0 whitespace-nowrap',
+              render: (entry: TCashFlowEntry) => <PayEntryButton entry={entry} />,
             },
           ]}
         />

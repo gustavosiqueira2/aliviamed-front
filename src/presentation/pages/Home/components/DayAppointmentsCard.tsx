@@ -6,8 +6,6 @@ import { EVENT_COLOR } from '@constants/EVENT_COLOR';
 
 import type { TAppointment } from '@interfaces/Appointment.interface';
 
-import AppointmentPageFooter from '@pages/Appointments/components/AppointmentPageFooter';
-
 const { Title } = Typography;
 
 type TDayAppointmentsCardProps = {
@@ -53,18 +51,6 @@ const DayAppointmentsCard: React.FC<TDayAppointmentsCardProps> = (props) => {
           )}
         </div>
       </Card>
-      <AppointmentPageFooter
-        filters={{
-          NO_SHOW: true,
-          CANCELED: true,
-          CONFIRMED: true,
-          IN_CONSULTATION: true,
-          SCHEDULED: true,
-          WAITING_CONSULTATION: true,
-          COMPLETED: true,
-        }}
-        onChangeFilter={() => {}}
-      />
     </div>
   );
 };

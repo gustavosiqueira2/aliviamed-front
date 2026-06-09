@@ -10,17 +10,23 @@ const { Text } = Typography;
 type TPreviousConsultsListProps = {
   patientId?: string;
   currentConsultId?: string;
+  limit?: number;
   onSelect: (consult: TConsult) => void;
 };
 
 const PreviousConsultsList: React.FC<TPreviousConsultsListProps> = (props) => {
-  const { patientId, currentConsultId, onSelect } = props;
+  const { patientId, currentConsultId, limit, onSelect } = props;
 
   const { data, isLoading } = usePatientConsultHistory(patientId);
 
-  const consults = (data ?? []).filter(
-    (c) => !currentConsultId || c.id !== currentConsultId,
-  );
+  const consults = (data ?? [])
+    .filter((c) => !currentConsultId || c.id !== currentConsultId)
+    .sort(
+      (a, b) =>
+        dayjs(b.finishedAt ?? b.startedAt).valueOf() -
+        dayjs(a.finishedAt ?? a.startedAt).valueOf(),
+    )
+    .slice(0, limit);
 
   if (isLoading) {
     return (
@@ -52,7 +58,9 @@ const PreviousConsultsList: React.FC<TPreviousConsultsListProps> = (props) => {
           onClick={() => onSelect(consult)}
         >
           <List.Item.Meta
-            title={dayjs(consult.finishedAt).format('DD/MM/YYYY [às] HH:mm')}
+            title={dayjs(consult.finishedAt ?? consult.startedAt).format(
+              'DD/MM/YYYY [às] HH:mm',
+            )}
             description={
               <span className="flex flex-col">
                 <Text className="text-xs! font-semibold!">

@@ -40,7 +40,7 @@ const Home = () => {
           />
         )}
 
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row">
           <DayAppointmentsCard appointments={dayAppointments} />
 
           <QueueCard

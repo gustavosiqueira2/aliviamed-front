@@ -1,6 +1,8 @@
-import { Card } from 'antd';
+import { Card, Typography } from 'antd';
 
 import type { LucideIcon } from 'lucide-react';
+
+const { Text } = Typography;
 
 type TSummaryCardProps = {
   icon: LucideIcon;
@@ -24,12 +26,14 @@ const SummaryCard: React.FC<TSummaryCardProps> = (props) => {
         </div>
 
         <div className="flex min-w-0 flex-col">
-          <span className="truncate text-xs text-gray-500">{label}</span>
-          <span
-            className={`truncate text-xl font-semibold ${valueClassName ?? 'text-gray-900'}`}
+          <Text type="secondary" className="truncate text-xs text-gray-500">
+            {label}
+          </Text>
+          <Text
+            className={`truncate text-xl! font-semibold ${valueClassName ?? 'text-gray-900'}`}
           >
             {value}
-          </span>
+          </Text>
         </div>
       </div>
     </Card>
