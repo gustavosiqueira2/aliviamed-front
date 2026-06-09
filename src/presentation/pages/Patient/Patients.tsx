@@ -15,6 +15,7 @@ import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
 import { PERMISSIONS } from '@constants/PERMISSIONS';
 import FadeWrapper from '@components/FadeWrapper';
 import Can from '@components/Can/Can';
+import InitialsAvatar from '@components/InitialsAvatar';
 
 const { Title, Text } = Typography;
 
@@ -86,7 +87,15 @@ const Patients = () => {
               render: (p) => <Text>{formatDocument(p.document)}</Text>,
               className: 'w-36',
             },
-            { title: 'Nome', dataIndex: 'name' },
+            {
+              title: 'Nome',
+              render: (p) => (
+                <div className="flex items-center gap-2">
+                  <InitialsAvatar name={p.name} size={24} fontSize={10} />
+                  <Text>{p.name}</Text>
+                </div>
+              ),
+            },
             {
               align: 'center',
               title: 'Data de nascimento',
