@@ -25,7 +25,7 @@ import { useTheme, type TThemeMode } from '@contexts/ThemeContext';
 import { useNotificationContext } from '@contexts/NotificationContext';
 
 import FadeWrapper from '@components/FadeWrapper';
-import GoogleCalendarCard from './components/GoogleCalendarCard';
+import IntegrationsPanel from './components/IntegrationsPanel';
 
 const { Title, Text } = Typography;
 
@@ -269,7 +269,7 @@ const Settings = () => {
             </div>
           )}
 
-          {section === 'integrations' && <GoogleCalendarCard />}
+          {section === 'integrations' && <IntegrationsPanel />}
         </div>
       </Card>
 
