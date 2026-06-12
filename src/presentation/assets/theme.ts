@@ -3,7 +3,7 @@ import { theme as antdTheme, type ThemeConfig } from 'antd';
 export const theme: ThemeConfig = {
   token: {
     colorPrimary: '#8b5cf6',
-    colorInfo: '#8b5cf6',
+    colorInfo: '#3b82f6',
     colorSuccess: '#4ade80',
     colorWarning: '#f59e0b',
     colorError: '#ef4444',
@@ -32,7 +32,7 @@ export const darkTheme: ThemeConfig = {
   algorithm: antdTheme.darkAlgorithm,
   token: {
     colorPrimary: '#8b5cf6',
-    colorInfo: '#8b5cf6',
+    colorInfo: '#3b82f6',
     colorSuccess: '#4ade80',
     colorWarning: '#f59e0b',
     colorError: '#ef4444',

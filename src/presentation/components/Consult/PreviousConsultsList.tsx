@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
-import { Empty, List, Skeleton, Typography } from 'antd';
+import { Empty, List, Skeleton, theme, Typography } from 'antd';
+import { Clipboard, Siren, Undo2 } from 'lucide-react';
 
 import { usePatientConsultHistory } from '@store/Patient.store';
 import { type TConsult } from '@interfaces/Consult.interface';
@@ -16,6 +17,16 @@ type TPreviousConsultsListProps = {
 
 const PreviousConsultsList: React.FC<TPreviousConsultsListProps> = (props) => {
   const { patientId, currentConsultId, limit, onSelect } = props;
+
+  const {
+    token: { colorPrimary, colorInfo, colorError },
+  } = theme.useToken();
+
+  const typeMeta = {
+    DEFAULT: { Icon: Clipboard, color: colorPrimary },
+    RETURN: { Icon: Undo2, color: colorInfo },
+    URGENT: { Icon: Siren, color: colorError },
+  } as const;
 
   const { data, isLoading } = usePatientConsultHistory(patientId);
 
@@ -52,30 +63,47 @@ const PreviousConsultsList: React.FC<TPreviousConsultsListProps> = (props) => {
       className="max-h-[70vh] overflow-auto"
       dataSource={consults}
       rowKey="id"
-      renderItem={(consult) => (
-        <List.Item
-          className="cursor-pointer px-4! py-2! transition-opacity hover:opacity-85"
-          onClick={() => onSelect(consult)}
-        >
-          <List.Item.Meta
-            title={dayjs(consult.finishedAt ?? consult.startedAt).format(
-              'DD/MM/YYYY [às] HH:mm',
-            )}
-            description={
-              <span className="flex flex-col">
-                <Text className="text-xs! font-semibold!">
+      renderItem={(consult) => {
+        const date = dayjs(consult.finishedAt ?? consult.startedAt);
+        const summary = consult.diagnosis || consult.notes;
+        const { Icon, color } =
+          typeMeta[consult.appointment.type] ?? typeMeta.DEFAULT;
+
+        return (
+          <List.Item
+            className="cursor-pointer px-4! py-3! transition-opacity hover:opacity-85"
+            onClick={() => onSelect(consult)}
+          >
+            <div className="flex w-full items-center gap-3">
+              <div
+                style={{ background: color + '15' }}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+              >
+                <Icon size={18} style={{ color }} />
+              </div>
+
+              <div className="flex shrink-0 flex-col whitespace-nowrap">
+                <Text className="text-xs!">{date.format('DD/MM/YYYY')}</Text>
+                <Text type="secondary" className="text-xs!">
+                  {date.format('HH:mm')}
+                </Text>
+              </div>
+
+              <div className="flex min-w-0 flex-1 flex-col">
+                <Text strong className="truncate text-sm!">
                   {consult.professional.name}
                 </Text>
-                <Text className="line-clamp-2 text-xs!">
-                  {consult.diagnosis ||
-                    consult.complaint ||
-                    'Sem anotações registradas'}
+                <Text
+                  type="secondary"
+                  className={`line-clamp-1 text-xs! ${summary ? '' : 'italic'}`}
+                >
+                  {summary || 'Sem anotações registradas'}
                 </Text>
-              </span>
-            }
-          />
-        </List.Item>
-      )}
+              </div>
+            </div>
+          </List.Item>
+        );
+      }}
     />
   );
 };

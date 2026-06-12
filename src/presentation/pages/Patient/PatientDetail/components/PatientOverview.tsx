@@ -80,14 +80,10 @@ const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
             <Card classNames={{ body: 'p-4!' }}>
               <div className="flex flex-col gap-2">
                 <div className="flex justify-between">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <Calendar size={14} style={{ color: colorPrimary }} />
 
-                    <Title
-                      level={5}
-                      type="secondary"
-                      className="my-0! text-sm!"
-                    >
+                    <Title level={5} className="my-0! text-sm!">
                       Consultas
                     </Title>
                   </div>
@@ -109,10 +105,10 @@ const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
             </Card>
             <Card classNames={{ body: 'p-4!' }}>
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <Calendar size={14} style={{ color: colorPrimary }} />
 
-                  <Title level={5} type="secondary" className="my-0! text-sm!">
+                  <Title level={5} className="my-0! text-sm!">
                     Primeira consulta
                   </Title>
                 </div>
@@ -131,10 +127,10 @@ const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
           <Card classNames={{ body: 'p-4!' }}>
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <CreditCard size={14} className="text-amber-500" />
 
-                  <Title level={5} type="secondary" className="my-0! text-sm!">
+                  <Title level={5} className="my-0! text-sm!">
                     Financeiro
                   </Title>
                 </div>

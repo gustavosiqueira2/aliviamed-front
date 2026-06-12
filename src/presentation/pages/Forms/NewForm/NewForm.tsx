@@ -215,6 +215,10 @@ const NewForm = () => {
     });
   };
 
+  const handleSaveForm = () => {
+    console.log(inputGroups);
+  };
+
   return (
     <>
       <Breadcrumb items={[{ title: 'Formulários' }, { title: 'Novo' }]} />
@@ -240,7 +244,9 @@ const NewForm = () => {
                 <Button icon={<Eye size={14} />} onClick={handlePreview}>
                   Preview
                 </Button>
-                <Button type="primary">Salvar formulário</Button>
+                <Button type="primary" onClick={handleSaveForm}>
+                  Salvar formulário
+                </Button>
               </div>
             </div>
 

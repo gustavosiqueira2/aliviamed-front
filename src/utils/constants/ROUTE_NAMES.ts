@@ -11,6 +11,8 @@ export const ROUTE_NAMES = {
   RESET_PASSWORD: '/reset-password',
   GOOGLE_CALLBACK: '/auth/google/callback',
 
+  CONFIRM_APPOINTMENT: '/confirm-appointment',
+
   HELP: '/help',
   PRIVACY: '/privacy',
 

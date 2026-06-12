@@ -1,5 +1,7 @@
 import type { TAppointmentStatus } from '@constants/APPOINTMENT_STATUS';
 
+import type { TAppointmentType } from '@interfaces/Appointment.interface';
+
 export type TConsultCreateReturn = {
   id: string;
   createdAt: Date;
@@ -44,6 +46,7 @@ export type TConsult = {
   appointment: {
     id: string;
     status: TAppointmentStatus;
+    type: TAppointmentType;
     startsAt: Date;
     endsAt: Date;
   };

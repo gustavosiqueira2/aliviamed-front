@@ -11,6 +11,7 @@ import { useNotificationContext } from '@contexts/NotificationContext';
 import { useAuth } from '@store/Auth.store';
 
 import CompleteRegistration from '@pages/Public/CompleteRegistration/CompleteRegistration';
+import ConfirmAppointment from '@pages/Public/ConfirmAppointment/ConfirmAppointment';
 import Privacy from '@pages/Public/Privacy/Privacy';
 import Help from '@pages/Public/Help/Help';
 
@@ -66,6 +67,10 @@ const MainRoutes = () => {
       <Route
         path={ROUTE_NAMES.GOOGLE_CALLBACK}
         element={<GoogleCallback />}
+      />
+      <Route
+        path={ROUTE_NAMES.CONFIRM_APPOINTMENT}
+        element={<ConfirmAppointment />}
       />
       <Route path={ROUTE_NAMES.HELP} element={<Help />} />
       <Route path={ROUTE_NAMES.PRIVACY} element={<Privacy />} />

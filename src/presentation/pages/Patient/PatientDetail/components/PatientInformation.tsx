@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { Button, Card, Divider, Typography } from 'antd';
+import { Button, Card, Divider, Tooltip, Typography } from 'antd';
 import {
   IdCard,
   Mail,
@@ -90,42 +90,42 @@ const PatientInformation: React.FC<TPatientInformationProps> = (props) => {
         ))}
       </div>
 
-      {(phoneDigits || patient.email) && (
-        <>
-          <Divider className="my-4!" />
+      <Divider className="my-4!" />
 
-          <div className="grid grid-cols-3 gap-2">
-            {phoneDigits && (
-              <Button
-                className={`flex-col gap-1! rounded-xl! py-7! text-xs! hover:bg-purple-500/5!`}
-                href={`tel:${phoneDigits}`}
-                icon={<Phone size={12} />}
-              >
-                Ligar
-              </Button>
-            )}
-            {phoneDigits && (
-              <Button
-                className={`flex-col gap-1! rounded-xl! py-7! text-xs! hover:bg-purple-500/5!`}
-                href={`https://wa.me/55${phoneDigits}`}
-                target="_blank"
-                icon={<MessageCircle size={16} />}
-              >
-                WhatsApp
-              </Button>
-            )}
-            {patient.email && (
-              <Button
-                className={`flex-col gap-1! rounded-xl! py-7! text-xs! hover:bg-purple-500/5!`}
-                href={`mailto:${patient.email}`}
-                icon={<Mail size={16} />}
-              >
-                E-mail
-              </Button>
-            )}
-          </div>
-        </>
-      )}
+      <div className="grid grid-cols-3 gap-2">
+        <Tooltip title={phoneDigits ? '' : 'Não cadastrado'}>
+          <Button
+            disabled={!phoneDigits}
+            className={`flex-col gap-1! rounded-xl! py-7! text-xs!`}
+            href={`tel:${phoneDigits}`}
+            icon={<Phone size={12} />}
+          >
+            Ligar
+          </Button>
+        </Tooltip>
+
+        <Tooltip title={phoneDigits ? '' : 'Não cadastrado'}>
+          <Button
+            disabled={!phoneDigits}
+            className={`flex-col gap-1! rounded-xl! py-7! text-xs!`}
+            href={`https://wa.me/55${phoneDigits}`}
+            target="_blank"
+            icon={<MessageCircle size={16} />}
+          >
+            WhatsApp
+          </Button>
+        </Tooltip>
+
+        <Tooltip title={patient.email ? '' : 'Não cadastrado'}>
+          <Button
+            className={`flex-col gap-1! rounded-xl! py-7! text-xs!`}
+            href={`mailto:${patient.email}`}
+            icon={<Mail size={16} />}
+          >
+            E-mail
+          </Button>
+        </Tooltip>
+      </div>
     </Card>
   );
 };
