@@ -362,7 +362,9 @@ const AppointmentDetails: React.FC<TAppointmentDetailsProps> = (props) => {
                       handleChangeStatus(APPOINTMENT_STATUS.COMPLETED)
                     }
                   >
-                    <Button block>Completar</Button>
+                    <Button block className="mt-2">
+                      Completar
+                    </Button>
                   </PopConfirmDefault>
                 </Can>
               )}
