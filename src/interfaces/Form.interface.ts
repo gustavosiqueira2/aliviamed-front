@@ -1,5 +1,7 @@
 import type { TInput } from '@pages/Forms/NewForm/NewForm';
 
+import type { ApiMeta } from '@interfaces/ApiMeta.interface';
+
 export type TFormSchemaGroup = {
   id: string;
   title: string;
@@ -21,6 +23,46 @@ export type TForm = {
 
 export type TFormDetail = TForm & {
   schema: TFormSchemaGroup[];
+};
+
+export type TFormStatusFilter = 'all' | 'pending' | 'done';
+
+export type TFormSummary = {
+  forms: number;
+  sent: number;
+  answered: number;
+  pending: number;
+  counts: {
+    all: number;
+    pending: number;
+    done: number;
+  };
+};
+
+export type TFormProfessionalOption = {
+  id: string;
+  name: string;
+};
+
+export type TFormsResponse = {
+  data: TForm[];
+  meta: ApiMeta;
+  summary: TFormSummary;
+  professionals: TFormProfessionalOption[];
+};
+
+export type TFormsQuery = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  professionalId?: string | null;
+  status?: TFormStatusFilter;
+};
+
+export type TFormOption = {
+  id: string;
+  name: string;
+  professionalId: string | null;
 };
 
 export type TFormSubmissionStatus = 'PENDING' | 'ANSWERED' | 'EXPIRED';

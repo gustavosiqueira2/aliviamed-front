@@ -1,10 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 import type {
   TAnswerFormPayload,
   TCreateFormPayload,
   TForm,
   TFormDetail,
+  TFormOption,
+  TFormsQuery,
+  TFormsResponse,
   TPatientFormSubmission,
   TPublicFormSubmission,
   TSendFormPayload,
@@ -14,14 +17,37 @@ import api from '../../services/api';
 
 import { queryClient } from './QueryClient';
 
-export const useForms = () =>
+export const useForms = (query: TFormsQuery = {}) =>
   useQuery({
-    queryKey: ['FORMS'],
-    queryFn: getForms,
+    queryKey: ['FORMS', query],
+    queryFn: () => getForms(query),
+    placeholderData: keepPreviousData,
   });
 
-const getForms = async (): Promise<TForm[]> => {
-  const { data } = await api.get<TForm[]>('/form');
+const getForms = async (query: TFormsQuery): Promise<TFormsResponse> => {
+  const { data } = await api.get<TFormsResponse>('/form', {
+    params: {
+      page: query.page,
+      limit: query.limit,
+      ...(query.search ? { search: query.search } : {}),
+      ...(query.professionalId ? { professionalId: query.professionalId } : {}),
+      ...(query.status && query.status !== 'all'
+        ? { status: query.status }
+        : {}),
+    },
+  });
+
+  return data;
+};
+
+export const useFormOptions = () =>
+  useQuery({
+    queryKey: ['FORM_OPTIONS'],
+    queryFn: getFormOptions,
+  });
+
+const getFormOptions = async (): Promise<TFormOption[]> => {
+  const { data } = await api.get<TFormOption[]>('/form/options');
 
   return data;
 };
@@ -73,6 +99,7 @@ export const useCreateForm = () =>
     mutationFn: createForm,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['FORMS'] });
+      queryClient.invalidateQueries({ queryKey: ['FORM_OPTIONS'] });
     },
   });
 

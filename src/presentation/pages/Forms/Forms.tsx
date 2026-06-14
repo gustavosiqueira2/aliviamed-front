@@ -36,6 +36,7 @@ import { PERMISSIONS } from '@constants/PERMISSIONS';
 import type { TForm } from '@interfaces/Form.interface';
 
 import { usePermissions } from '@hooks/usePermissions';
+import { useDebounce } from '@hooks/useDebounce';
 
 import { useAuth } from '@store/Auth.store';
 import { useForm, useForms } from '@store/Form.store';
@@ -135,7 +136,6 @@ const Forms = () => {
 
   const { data: auth } = useAuth();
   const { hasPermission } = usePermissions();
-  const { data: forms = [], isLoading } = useForms();
 
   const canViewAll = hasPermission(PERMISSIONS.FORM_VIEW_ALL);
 
@@ -151,28 +151,37 @@ const Forms = () => {
     null,
   );
   const [filter, setFilter] = useState<TFilter>('all');
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-  const professionalOptions = Array.from(
-    forms
-      .reduce((map, form) => {
-        if (form.professionalId && form.professionalName) {
-          map.set(form.professionalId, form.professionalName);
-        }
-        return map;
-      }, new Map<string, string>())
-      .entries(),
-  ).map(([value, label]) => ({ value, label }));
+  const debouncedSearch = useDebounce(search, 400);
+
+  const { data: response, isLoading } = useForms({
+    page,
+    limit,
+    search: debouncedSearch,
+    professionalId: professionalFilter,
+    status: filter,
+  });
+
+  const forms = response?.data ?? [];
+  const summary = response?.summary;
+
+  const professionalOptions = (response?.professionals ?? []).map(
+    (professional) => ({ value: professional.id, label: professional.name }),
+  );
 
   const [open] = useState(false);
 
-  const totals = forms.reduce(
-    (acc, form) => ({
-      sent: acc.sent + form.sent,
-      answered: acc.answered + form.answered,
-      pending: acc.pending + form.pending,
-    }),
-    { sent: 0, answered: 0, pending: 0 },
-  );
+  // O resumo e os contadores refletem sempre o total da clinica (vem do
+  // backend), independente dos filtros aplicados na lista.
+  const totals = {
+    sent: summary?.sent ?? 0,
+    answered: summary?.answered ?? 0,
+    pending: summary?.pending ?? 0,
+  };
+  const totalForms = summary?.forms ?? 0;
+  const counts = summary?.counts ?? { all: 0, pending: 0, done: 0 };
 
   const conversao = totals.sent
     ? Math.round((totals.answered / totals.sent) * 100)
@@ -181,26 +190,26 @@ const Forms = () => {
     ? Math.round((totals.pending / totals.sent) * 100)
     : 0;
 
-  const nameFiltered = forms.filter(
-    (form) =>
-      form.name.toLowerCase().includes(search.trim().toLowerCase()) &&
-      (professionalFilter ? form.professionalId === professionalFilter : true),
-  );
-
-  const counts = {
-    all: nameFiltered.length,
-    pending: nameFiltered.filter((form) => form.pending > 0).length,
-    done: nameFiltered.filter((form) => form.sent > 0 && form.pending === 0)
-      .length,
+  // Volta para a primeira pagina sempre que um filtro muda.
+  const onSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1);
+  };
+  const onProfessionalChange = (value: string | null) => {
+    setProfessionalFilter(value);
+    setPage(1);
+  };
+  const onFilterChange = (value: TFilter) => {
+    setFilter(value);
+    setPage(1);
   };
 
-  const visible = nameFiltered.filter((form) =>
-    filter === 'pending'
-      ? form.pending > 0
-      : filter === 'done'
-        ? form.sent > 0 && form.pending === 0
-        : true,
-  );
+  const hasActiveFilters = !!search || !!professionalFilter;
+  const clearFilters = () => {
+    setSearch('');
+    setProfessionalFilter(null);
+    setPage(1);
+  };
 
   const columns: TableProps<TForm>['columns'] = [
     {
@@ -354,7 +363,7 @@ const Forms = () => {
               icon={<Send size={15} />}
               label="Enviados"
               value={totals.sent}
-              hint={`${forms.length} ${forms.length === 1 ? 'formulário' : 'formulários'}`}
+              hint={`${totalForms} ${totalForms === 1 ? 'formulário' : 'formulários'}`}
             />
             <StatCard
               divider
@@ -381,7 +390,7 @@ const Forms = () => {
                 prefix={<Search size={16} className="text-gray-400" />}
                 placeholder="Buscar formulário..."
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => onSearchChange(event.target.value)}
                 className="max-w-md"
               />
 
@@ -391,16 +400,20 @@ const Forms = () => {
                   showSearch={{ optionFilterProp: 'label' }}
                   placeholder="Filtrar por profissional"
                   value={professionalFilter}
-                  onChange={(value) => setProfessionalFilter(value ?? null)}
+                  onChange={(value) => onProfessionalChange(value ?? null)}
                   options={professionalOptions}
                   className="min-w-56"
                 />
               )}
+
+              <Button disabled={!hasActiveFilters} onClick={clearFilters}>
+                Limpar filtros
+              </Button>
             </div>
 
             <Segmented<TFilter>
               value={filter}
-              onChange={setFilter}
+              onChange={onFilterChange}
               options={[
                 { label: tabLabel('Todos', counts.all), value: 'all' },
                 {
@@ -419,10 +432,22 @@ const Forms = () => {
           classNames={{ body: 'p-0!' }}
         >
           <Table<TForm>
-            dataSource={visible}
+            dataSource={forms}
             rowKey="id"
             loading={isLoading}
             columns={columns}
+            pagination={{
+              current: page,
+              pageSize: limit,
+              total: response?.meta.total ?? 0,
+              showSizeChanger: true,
+              showTotal: (total) =>
+                `${total} ${total === 1 ? 'formulário' : 'formulários'}`,
+              onChange: (nextPage, nextLimit) => {
+                setPage(nextPage);
+                setLimit(nextLimit);
+              },
+            }}
             locale={{
               emptyText: <Empty description="Nenhum formulário encontrado" />,
             }}

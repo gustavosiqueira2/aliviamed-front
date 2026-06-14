@@ -12,7 +12,7 @@ import { getApiError } from '@functions/getApiError';
 import { useNotificationContext } from '@contexts/NotificationContext';
 
 import { useAuth } from '@store/Auth.store';
-import { useForms, useSendForm } from '@store/Form.store';
+import { useFormOptions, useSendForm } from '@store/Form.store';
 
 import type { TForm } from '@interfaces/Form.interface';
 
@@ -41,7 +41,7 @@ const SendFormModal: React.FC<TSendFormModalProps> = ({
 
   const { notify } = useNotificationContext();
 
-  const { data: forms = [] } = useForms();
+  const { data: forms = [] } = useFormOptions();
   const { isPending, mutateAsync: sendForm } = useSendForm();
 
   const isProfessional = auth?.clinicProfile?.role === USER_ROLES.PROFESSIONAL;
