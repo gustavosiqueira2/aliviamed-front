@@ -40,7 +40,6 @@ const StartConsult = () => {
         setErrMessage(apiMessage);
 
         if (errMessage) {
-          console.log('2');
           notify({
             type: 'error',
             title: 'Houve um problema',
