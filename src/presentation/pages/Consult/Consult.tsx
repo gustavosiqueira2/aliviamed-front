@@ -60,8 +60,7 @@ const Consult = () => {
     useUpdateConsult();
 
   const [isFinishingConsultation, setIsFinishingConsultation] = useState(false);
-  const [selectedConsult, setSelectedConsult] =
-    useState<TConsult | null>(null);
+  const [selectedConsult, setSelectedConsult] = useState<TConsult | null>(null);
 
   const { control, reset, formState } = useForm<TConsultForm>();
 
@@ -161,6 +160,10 @@ const Consult = () => {
                   </span>
                 </Text>
               }
+              style={{
+                borderColor: colorPrimary + '40',
+                background: colorPrimary + '10',
+              }}
             />
 
             <div className="flex gap-2">

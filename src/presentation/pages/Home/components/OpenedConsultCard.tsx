@@ -26,6 +26,10 @@ const OpenedConsultCard: React.FC<TOpenedConsultCardProps> = (props) => {
 
   return (
     <Alert
+      style={{
+        borderColor: colorPrimary + '40',
+        background: colorPrimary + '10',
+      }}
       showIcon
       icon={<Podcast size={18} color={colorPrimary} />}
       title={
@@ -41,7 +45,9 @@ const OpenedConsultCard: React.FC<TOpenedConsultCardProps> = (props) => {
           <Can permission={PERMISSIONS.CONSULT_UPDATE}>
             <Button
               type="primary"
-              onClick={() => navigate(`${ROUTE_NAMES.CONSULT}/${appointmentId}`)}
+              onClick={() =>
+                navigate(`${ROUTE_NAMES.CONSULT}/${appointmentId}`)
+              }
             >
               Continuar consulta
             </Button>
