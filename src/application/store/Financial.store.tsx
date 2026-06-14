@@ -62,11 +62,11 @@ const getPatientFinancial = async (
   };
 };
 
-export const usePatientFinancial = (patientId?: string) =>
+export const usePatientFinancial = (patientId?: string, enabled = true) =>
   useQuery({
     queryKey: ['PATIENT-FINANCIAL', patientId],
     queryFn: () => getPatientFinancial(patientId!),
-    enabled: !!patientId,
+    enabled: enabled && !!patientId,
   });
 
 const getPaymentByAppointment = async (

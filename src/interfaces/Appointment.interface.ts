@@ -63,6 +63,19 @@ export type TAppointmentQuery = {
 
 export type TAppointmentType = 'DEFAULT' | 'RETURN' | 'URGENT';
 
+export type TNextAppointment = {
+  id: string;
+  startsAt: string;
+  endsAt: string;
+  type: TAppointmentType;
+  status: keyof typeof APPOINTMENT_STATUS;
+  professional: {
+    id: string;
+    name: string;
+  };
+  specialty: string | null;
+};
+
 export type TAppointmentCreatePayload = {
   professionalId: string;
   patientId: string;

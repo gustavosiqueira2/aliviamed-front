@@ -4,15 +4,13 @@ import dayjs from 'dayjs';
 
 import { Link, useNavigate, useParams } from 'react-router';
 
-import { Calendar, SquarePen } from 'lucide-react';
+import { SquarePen } from 'lucide-react';
 import {
-  Alert,
   Breadcrumb,
   Button,
   Card,
   Skeleton,
   Tabs,
-  theme,
   Typography,
 } from 'antd';
 
@@ -33,34 +31,36 @@ import Can from '@components/Can/Can';
 import PatientInformation from './components/PatientInformation';
 import PatientOverview from './components/PatientOverview';
 import PatientFinancial from './components/PatientFinancial';
+import PatientForms from './components/PatientForms';
+import PatientNextAppointment from './components/PatientNextAppointment';
 import { usePatientFinancial } from '@store/Financial.store';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 const PatientDetail = () => {
   const { patientId } = useParams();
   const navigate = useNavigate();
 
-  const {
-    token: { colorPrimary },
-  } = theme.useToken();
-
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedConsult, setSelectedConsult] = useState<TConsult | null>(null);
-
-  const { data: patient, isLoading: loadingPatient } = usePatient(patientId!);
-  const { data: financial, isLoading: loadingFinancial } =
-    usePatientFinancial(patientId);
 
   const { hasPermission } = usePermissions();
   const canViewConsults = hasPermission(PERMISSIONS.CONSULT_VIEW);
   const canViewFinancial = hasPermission(PERMISSIONS.FINANCIAL_VIEW);
+  const canViewForms = hasPermission(PERMISSIONS.FORM_VIEW);
+  const canViewAppointments = hasPermission(PERMISSIONS.APPOINTMENT_VIEW);
+
+  const { data: patient, isLoading: loadingPatient } = usePatient(patientId!);
+  const { data: financial, isLoading: loadingFinancial } = usePatientFinancial(
+    patientId,
+    canViewFinancial,
+  );
 
   const { data: consultHistory } = usePatientConsultHistory(
     canViewConsults ? patientId : undefined,
   );
 
-  if (loadingPatient || !patient || loadingFinancial || !financial) {
+  if (loadingPatient || !patient || loadingFinancial) {
     return (
       <FadeWrapper>
         <Skeleton active avatar paragraph={{ rows: 6 }} />
@@ -81,7 +81,8 @@ const PatientDetail = () => {
       children: (
         <PatientOverview
           patientId={patient.id}
-          financialValue={financial.summary.received}
+          patientName={patient.name}
+          financialValue={financial?.summary.received}
           firstConsult={firstConsult}
           consultCount={consultCount}
           canViewConsults={canViewConsults}
@@ -109,13 +110,21 @@ const PatientDetail = () => {
     });
   }
 
-  if (canViewFinancial) {
+  if (canViewFinancial && financial) {
     tabItems.push({
       key: 'financial',
       label: 'Financeiro',
       children: (
         <PatientFinancial financial={financial} loading={loadingFinancial} />
       ),
+    });
+  }
+
+  if (canViewForms) {
+    tabItems.push({
+      key: 'forms',
+      label: 'Formulários',
+      children: <PatientForms patientId={patient.id} />,
     });
   }
 
@@ -151,31 +160,9 @@ const PatientDetail = () => {
         <div className="lg:w-80 lg:shrink-0">
           <PatientInformation patient={patient} />
 
-          <Alert
-            style={{
-              borderColor: colorPrimary + '40',
-              background: colorPrimary + '10',
-            }}
-            className="mt-4!"
-            title={
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1">
-                  <Calendar style={{ color: colorPrimary }} size={16} />
-
-                  <Text
-                    style={{ color: colorPrimary }}
-                    className="font-semibold!"
-                  >
-                    Proxima consulta
-                  </Text>
-                </div>
-
-                <Title level={5} className="mt-2! mb-0!">
-                  22 jun · 14:00
-                </Title>
-                <Text type="secondary">Dra. Helena Dias · Retorno</Text>
-              </div>
-            }
+          <PatientNextAppointment
+            patientId={patient.id}
+            enabled={canViewAppointments}
           />
         </div>
 

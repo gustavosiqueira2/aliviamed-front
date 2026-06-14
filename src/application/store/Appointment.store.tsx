@@ -16,6 +16,7 @@ import type {
   TAppointmentReturn,
   TAppointmentQuery,
   TAppointmentReschedulePayload,
+  TNextAppointment,
 } from '@interfaces/Appointment.interface';
 
 import api from '../../services/api';
@@ -78,6 +79,26 @@ export const useAppointment = (id?: string) =>
     queryFn: () => getAppointment(id!),
     enabled: !!id,
   });
+
+export const usePatientNextAppointment = (
+  patientId?: string,
+  enabled = true,
+) =>
+  useQuery({
+    queryKey: ['PATIENT-NEXT-APPOINTMENT', patientId],
+    queryFn: () => getPatientNextAppointment(patientId!),
+    enabled: enabled && !!patientId,
+  });
+
+const getPatientNextAppointment = async (
+  patientId: string,
+): Promise<TNextAppointment | null> => {
+  const { data } = await api.get<TNextAppointment | null>(
+    `/appointment/patient/${patientId}/next`,
+  );
+
+  return data;
+};
 
 export const useCreateAppointment = () =>
   useMutation({

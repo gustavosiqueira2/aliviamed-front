@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { Link } from 'react-router';
 
 import type { Dayjs } from 'dayjs';
@@ -20,12 +22,14 @@ import { formatCurrency } from '@functions/formatCurrency';
 
 import PreviousConsultsList from '@components/Consult/PreviousConsultsList';
 import Can from '@components/Can/Can';
+import SendFormModal from '@components/Modal/SendFormModal';
 
 const { Title, Text } = Typography;
 
 type TPatientOverviewProps = {
   patientId: string;
-  financialValue: number;
+  patientName: string;
+  financialValue?: number;
   firstConsult: Dayjs;
   consultCount: number;
   canViewConsults: boolean;
@@ -38,6 +42,7 @@ type TPatientOverviewProps = {
 const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
   const {
     patientId,
+    patientName,
     financialValue,
     firstConsult,
     consultCount,
@@ -52,6 +57,8 @@ const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
     token: { colorPrimary },
   } = theme.useToken();
 
+  const [sendFormOpen, setSendFormOpen] = useState(false);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4">
@@ -62,10 +69,13 @@ const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
             </Button>
           </Link>
         </Can>
-        <Can permission={PERMISSIONS.PATIENT_UPDATE}>
-          <Link to={`${ROUTE_NAMES.PATIENTS}/update/${patientId}`}>
-            <Button icon={<FileInput size={15} />}>Enviar formulário</Button>
-          </Link>
+        <Can permission={PERMISSIONS.FORM_SEND}>
+          <Button
+            icon={<FileInput size={15} />}
+            onClick={() => setSendFormOpen(true)}
+          >
+            Enviar formulário
+          </Button>
         </Can>
         <Can permission={PERMISSIONS.PATIENT_UPDATE}>
           <Link to={`${ROUTE_NAMES.PATIENTS}/update/${patientId}`}>
@@ -144,12 +154,14 @@ const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
                 </Text>
               </div>
 
-              <div className="flex flex-col">
-                <Text className="text-2xl!">
-                  {formatCurrency(financialValue)}
-                </Text>
-                <Text type="secondary">recebidos</Text>
-              </div>
+              {financialValue && (
+                <div className="flex flex-col">
+                  <Text className="text-2xl!">
+                    {formatCurrency(financialValue)}
+                  </Text>
+                  <Text type="secondary">recebidos</Text>
+                </div>
+              )}
             </div>
           </Card>
         )}
@@ -181,6 +193,12 @@ const PatientOverview: React.FC<TPatientOverviewProps> = (props) => {
           />
         </Card>
       )}
+
+      <SendFormModal
+        open={sendFormOpen}
+        onCancel={() => setSendFormOpen(false)}
+        initialPatient={{ id: patientId, name: patientName }}
+      />
     </div>
   );
 };
