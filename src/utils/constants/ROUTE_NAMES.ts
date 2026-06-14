@@ -12,6 +12,7 @@ export const ROUTE_NAMES = {
   GOOGLE_CALLBACK: '/auth/google/callback',
 
   CONFIRM_APPOINTMENT: '/confirm-appointment',
+  ANSWER_FORM: '/answer-form',
 
   HELP: '/help',
   PRIVACY: '/privacy',

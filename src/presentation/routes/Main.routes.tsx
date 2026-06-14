@@ -12,6 +12,7 @@ import { useAuth } from '@store/Auth.store';
 
 import CompleteRegistration from '@pages/Public/CompleteRegistration/CompleteRegistration';
 import ConfirmAppointment from '@pages/Public/ConfirmAppointment/ConfirmAppointment';
+import AnswerForm from '@pages/Public/AnswerForm/AnswerForm';
 import Privacy from '@pages/Public/Privacy/Privacy';
 import Help from '@pages/Public/Help/Help';
 
@@ -72,6 +73,7 @@ const MainRoutes = () => {
         path={ROUTE_NAMES.CONFIRM_APPOINTMENT}
         element={<ConfirmAppointment />}
       />
+      <Route path={ROUTE_NAMES.ANSWER_FORM} element={<AnswerForm />} />
       <Route path={ROUTE_NAMES.HELP} element={<Help />} />
       <Route path={ROUTE_NAMES.PRIVACY} element={<Privacy />} />
     </Routes>

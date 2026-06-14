@@ -101,8 +101,22 @@ const AppRoutes = () => (
 
       <Route path={ROUTE_NAMES.INVITES} element={<Invites />} />
 
-      <Route path={ROUTE_NAMES.FORMS} element={<Forms />} />
-      <Route path={ROUTE_NAMES.NEW_FORM} element={<NewForm />} />
+      <Route
+        path={ROUTE_NAMES.FORMS}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.FORM_VIEW}>
+            <Forms />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={ROUTE_NAMES.NEW_FORM}
+        element={
+          <ProtectedRoute permission={PERMISSIONS.FORM_CREATE}>
+            <NewForm />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path={ROUTE_NAMES.WORKFLOW} element={<Workflows />} />
 

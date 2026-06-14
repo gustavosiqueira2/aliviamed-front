@@ -17,18 +17,33 @@ type TPatientSelectProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   onSelected?: (patient: { id: string; name: string } | null) => void;
+  disabled?: boolean;
+  fixedOption?: { id: string; name: string };
 };
 
 const PatientSelect = <T extends FieldValues>({
   control,
   name,
   onSelected,
+  disabled,
+  fixedOption,
 }: TPatientSelectProps<T>) => {
   const [search, setSearch] = useState('');
 
   const debouncedSearch = useDebounce(search, 400);
 
   const { data, isLoading } = useSearchPatients(debouncedSearch);
+
+  const options = (
+    data?.map((patient) => ({
+      label: patient.name,
+      value: patient.id,
+    })) ?? []
+  ).concat(
+    fixedOption && !data?.some((patient) => patient.id === fixedOption.id)
+      ? [{ label: fixedOption.name, value: fixedOption.id }]
+      : [],
+  );
 
   return (
     <Controller
@@ -43,6 +58,7 @@ const PatientSelect = <T extends FieldValues>({
               onSearch: setSearch,
             }}
             allowClear
+            disabled={disabled}
             value={value}
             loading={isLoading}
             placeholder="Buscar paciente"
@@ -56,10 +72,7 @@ const PatientSelect = <T extends FieldValues>({
                 patient ? { id: patient.id, name: patient.name } : null,
               );
             }}
-            options={data?.map((patient) => ({
-              label: patient.name,
-              value: patient.id,
-            }))}
+            options={options}
           />
           {error && (
             <div style={{ color: '#ff4d4f', marginTop: 4, fontSize: 12 }}>

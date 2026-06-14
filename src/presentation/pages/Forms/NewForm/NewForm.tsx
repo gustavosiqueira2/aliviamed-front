@@ -1,11 +1,15 @@
 import { useState } from 'react';
 
+import { useNavigate } from 'react-router';
+
 import {
   Alert,
   Breadcrumb,
   Button,
   Card,
   Divider,
+  Input,
+  Modal,
   theme,
   Typography,
 } from 'antd';
@@ -20,10 +24,18 @@ import {
 import { DragDropProvider, type DragOverEvent } from '@dnd-kit/react';
 
 import { DEFAULT_FORM_INPUT_GROUP } from '@constants/DEFAULT_FORM_INPUT_GROUP';
+import { ROUTE_NAMES } from '@constants/ROUTE_NAMES';
+
+import { getApiError } from '@functions/getApiError';
+
+import type { TFormSchemaGroup } from '@interfaces/Form.interface';
+
+import { useNotificationContext } from '@contexts/NotificationContext';
 
 import { useAuth } from '@store/Auth.store';
+import { useCreateForm } from '@store/Form.store';
 
-import FormPreview from '@pages/Forms/NewForm/components/FormPreview';
+import FormPreview from '@components/FormPreview';
 
 import SortableInputGroup from './components/SortableInputGroup';
 import InputGroupCard from './components/InputGroupCard';
@@ -74,11 +86,18 @@ const NewForm = () => {
 
   const { data } = useAuth();
 
+  const navigate = useNavigate();
+  const { notify } = useNotificationContext();
+  const createForm = useCreateForm();
+
   const [inputGroups, setInputGroups] = useState<TInputGroup[]>([]);
 
   const [groupToEditId, setGroupToEditId] = useState<string>();
 
   const [previewOpen, setPreviewOpen] = useState(false);
+
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [formName, setFormName] = useState('');
 
   const groupToEdit = inputGroups.find((group) => group.id === groupToEditId);
 
@@ -216,7 +235,58 @@ const NewForm = () => {
   };
 
   const handleSaveForm = () => {
-    console.log(inputGroups);
+    if (inputGroups.length === 0) {
+      notify({
+        type: 'warning',
+        title: 'Adicione ao menos um grupo',
+        description: 'Inclua pelo menos um grupo de perguntas antes de salvar.',
+      });
+
+      return;
+    }
+
+    setSaveOpen(true);
+  };
+
+  const onConfirmSave = async () => {
+    const name = formName.trim();
+
+    if (!name) {
+      notify({
+        type: 'warning',
+        title: 'Informe um nome para o formulário',
+        description: 'O nome ajuda a identificar o formulário na listagem.',
+      });
+
+      return;
+    }
+
+    const schema: TFormSchemaGroup[] = inputGroups.map(
+      ({ id, title, description, inputs }) => ({
+        id,
+        title,
+        description,
+        inputs,
+      }),
+    );
+
+    try {
+      await createForm.mutateAsync({ name, schema });
+
+      notify({
+        type: 'success',
+        title: 'Formulário salvo',
+        description: `"${name}" foi criado com sucesso.`,
+      });
+
+      navigate(ROUTE_NAMES.FORMS);
+    } catch (err) {
+      notify({
+        type: 'error',
+        title: 'Não foi possível salvar',
+        description: getApiError(err),
+      });
+    }
   };
 
   return (
@@ -356,6 +426,28 @@ const NewForm = () => {
         clinicName={data?.clinicProfile?.clinic.name}
         groups={inputGroups}
       />
+
+      <Modal
+        open={saveOpen}
+        title="Salvar formulário"
+        okText="Salvar"
+        cancelText="Cancelar"
+        confirmLoading={createForm.isPending}
+        onOk={() => void onConfirmSave()}
+        onCancel={() => setSaveOpen(false)}
+      >
+        <Text type="secondary">
+          Dê um nome para identificar este formulário na listagem.
+        </Text>
+        <Input
+          className="mt-2!"
+          placeholder="Ex.: Anamnese inicial"
+          value={formName}
+          onChange={(e) => setFormName(e.target.value)}
+          onPressEnter={() => void onConfirmSave()}
+          maxLength={100}
+        />
+      </Modal>
     </>
   );
 };

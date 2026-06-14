@@ -18,18 +18,33 @@ type TProfessionalSelectProps<T extends FieldValues> = {
   control: Control<T>;
   name: Path<T>;
   onSelected?: (professional: TClinicSearchProfessional | null) => void;
+  disabled?: boolean;
+  fixedOption?: { id: string; name: string };
 };
 
 const ProfessionalSelect = <T extends FieldValues>({
   control,
   name,
   onSelected,
+  disabled,
+  fixedOption,
 }: TProfessionalSelectProps<T>) => {
   const [search, setSearch] = useState('');
 
   const debouncedSearch = useDebounce(search, 400);
 
   const { data, isLoading } = useSearchProfessional(debouncedSearch);
+
+  const options = (
+    data?.map((professional) => ({
+      label: professional.name,
+      value: professional.id,
+    })) ?? []
+  ).concat(
+    fixedOption && !data?.some((p) => p.id === fixedOption.id)
+      ? [{ label: fixedOption.name, value: fixedOption.id }]
+      : [],
+  );
 
   return (
     <Controller
@@ -39,6 +54,7 @@ const ProfessionalSelect = <T extends FieldValues>({
         <>
           <Select
             allowClear
+            disabled={disabled}
             showSearch={{
               filterOption: false,
               optionFilterProp: 'label',
@@ -61,10 +77,7 @@ const ProfessionalSelect = <T extends FieldValues>({
                   ? 'Digite para pesquisar'
                   : 'Nenhum profissional encontrado'
             }
-            options={data?.map((professional) => ({
-              label: professional.name,
-              value: professional.id,
-            }))}
+            options={options}
           />
           {error && (
             <div style={{ color: '#ff4d4f', marginTop: 4, fontSize: 12 }}>

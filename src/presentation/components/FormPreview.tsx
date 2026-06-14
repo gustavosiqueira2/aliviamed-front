@@ -1,6 +1,8 @@
 import { Fragment, useEffect, useRef } from 'react';
+
 import { createPortal } from 'react-dom';
 
+import { Eye, Lock, ShieldCheck, X } from 'lucide-react';
 import {
   Alert,
   Button,
@@ -9,16 +11,15 @@ import {
   Divider,
   Empty,
   Form,
+  Spin,
   theme,
   Typography,
 } from 'antd';
-import { Eye, Lock, ShieldCheck, X } from 'lucide-react';
 
 import { useWidthBreakpoint } from '@hooks/useWidthBreakpoint';
 
-import type { TInput } from '../NewForm';
-
-import { renderFormInput } from './renderFormInput';
+import { renderFormInput } from '@pages/Forms/NewForm/components/renderFormInput';
+import type { TInput } from '@pages/Forms/NewForm/NewForm';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -152,10 +153,11 @@ type TFormPreviewProps = {
   onClose: () => void;
   clinicName?: string;
   groups: TFormPreviewGroup[];
+  loading?: boolean;
 };
 
 const FormPreview: React.FC<TFormPreviewProps> = (props) => {
-  const { open, onClose, clinicName, groups } = props;
+  const { open, onClose, clinicName, groups, loading } = props;
 
   const {
     token: { colorBgContainer, colorBgBase },
@@ -285,7 +287,13 @@ radial-gradient(#8b5cf640 2px, transparent 2px), radial-gradient(#8b5cf620 2px, 
         />
       </div>
 
-      {content}
+      {loading ? (
+        <div className="flex h-full items-center justify-center">
+          <Spin size="large" />
+        </div>
+      ) : (
+        content
+      )}
     </div>,
     document.body,
   );

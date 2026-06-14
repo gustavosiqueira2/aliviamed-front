@@ -5,7 +5,6 @@ import {
   House,
   UserRound,
   Wallet,
-  Workflow,
 } from 'lucide-react';
 
 import { type MenuProps } from 'antd';
@@ -69,6 +68,7 @@ const SideBarOption = (
       },
     },
     {
+      permission: PERMISSIONS.FORM_VIEW,
       item: {
         key: ROUTE_NAMES.FORMS,
         label: 'Formulários',
@@ -105,19 +105,19 @@ const SideBarOption = (
         onClick: () => handleNavigate(ROUTE_NAMES.CLINIC),
       },
     },
-    {
-      item: {
-        key: ROUTE_NAMES.WORKFLOW,
-        label: 'Eventos',
-        icon: (
-          <Workflow
-            size={18}
-            {...getIconColor('#c026d3', ROUTE_NAMES.WORKFLOW)}
-          />
-        ),
-        onClick: () => handleNavigate(ROUTE_NAMES.WORKFLOW),
-      },
-    },
+    // {
+    //   item: {
+    //     key: ROUTE_NAMES.WORKFLOW,
+    //     label: 'Eventos',
+    //     icon: (
+    //       <Workflow
+    //         size={18}
+    //         {...getIconColor('#c026d3', ROUTE_NAMES.WORKFLOW)}
+    //       />
+    //     ),
+    //     onClick: () => handleNavigate(ROUTE_NAMES.WORKFLOW),
+    //   },
+    // },
   ];
 
   return start
